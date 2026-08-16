@@ -51,6 +51,15 @@ repositories {
     }
 }
 
+def bundledLibs = provider {
+    configurations.runtimeClasspath.filter {
+        it.name.startsWith("gson-") || it.name.startsWith("snakeyaml-")
+    }.collect { zipTree(it) }
+}
+
 jar {
     from(project(":authsuite-common").sourceSets.main.output)
+    from(bundledLibs) {
+        exclude("META-INF/**", "module-info.class", "**/*.SF", "**/*.DSA", "**/*.RSA")
+    }
 }

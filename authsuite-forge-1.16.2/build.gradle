@@ -69,9 +69,18 @@ tasks.named("compileJava", JavaCompile) {
     options.release = 8
 }
 
+def bundledLibs = provider {
+    configurations.runtimeClasspath.filter {
+        it.name.startsWith("gson-") || it.name.startsWith("snakeyaml-")
+    }.collect { zipTree(it) }
+}
+
 jar {
     manifest {
         attributes["MixinConfigs"] = "authsuite.mixins.json"
     }
     from(project(":authsuite-common-legacy").sourceSets.main.output)
+    from(bundledLibs) {
+        exclude("META-INF/**", "module-info.class", "**/*.SF", "**/*.DSA", "**/*.RSA")
+    }
 }
