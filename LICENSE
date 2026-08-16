@@ -1,0 +1,612 @@
+CEASE
+Cassi's Copyleft Environment Agnostic Software Enforcement License
+Version 1.0
+Copyright © 2026 CEASE Publishers
+Everyone is permitted to copy and distribute verbatim copies of this license document, but modification of this license text is not permitted.
+Preamble
+The purpose of the Cassi's Copyleft Environment Agnostic Software Enforcement License ("CEASE") is to preserve the freedom of software regardless of how that software is used, modified, deployed, distributed, hosted, embedded, or otherwise operated.
+Software should remain free not merely when it is distributed, but whenever it is modified.
+Traditional copyleft licenses generally attach their strongest obligations to the distribution or conveyance of modified software. Network copyleft licenses additionally address software that is operated as a service for users over a computer network. CEASE goes further: the permission to create and use a Modified Work is itself conditioned upon public availability of the Corresponding Source.
+A person or organization may use CEASE software commercially, privately, internally, publicly, as a service, or in any other environment. However, a person or organization that exercises the permission granted by this License to Modify the software must make the resulting Corresponding Source publicly available under this License.
+There is no private-fork exception.
+There is no internal-use exception.
+There is no enterprise-use exception.
+There is no non-commercial exception.
+There is no distribution requirement for the modification obligation.
+There is no network-use requirement for the modification obligation.
+If you modify CEASE software under the permission granted by this License, you publish the corresponding source.
+CEASE does not prohibit commercial activity. You may sell CEASE software, sell Modified Works, charge for hosting, charge for support, charge for development, incorporate CEASE software into commercial products, and operate CEASE software as a commercial service.
+Commercial value may come from convenience, integration, support, maintenance, hardware, customization, hosting, expertise, or any other legitimate service.
+What CEASE requires is that the freedoms granted by this License remain available to the public and that recipients and prospective purchasers are informed of the existence and origin of the CEASE-covered software.
+0. Definitions
+0.1 "This License"
+"This License" means the Cassi's Copyleft Environment Agnostic Software Enforcement License, Version 1.0, or any later version of CEASE that the relevant Covered Work permits you to use.
+0.2 "The Program"
+"The Program" means the copyrightable software work to which this License has been applied by its copyright holder.
+0.3 "Covered Work"
+A "Covered Work" means either the Program or a work based upon the Program.
+A work is "based upon" the Program when it contains the Program or a substantial portion of it, incorporates protected portions of the Program, modifies or adapts the Program, or otherwise constitutes a derivative work under applicable copyright law.
+A Covered Work may consist of one or more files, modules, libraries, programs, services, or other copyrightable components.
+0.4 "Modify"
+To "Modify" a work means to copy from, adapt, translate, alter, transform, patch, refactor, extend, or otherwise change all or part of the work in a manner requiring permission under applicable copyright law.
+Modification includes changes made directly to Source Code and changes produced through other mechanisms where the resulting work is a derivative work of the Covered Work.
+An exact copy of the Program that contains no modification is not a Modified Work solely because it has been copied.
+0.5 "Modified Work"
+A "Modified Work" means a Covered Work that has been Modified.
+0.6 "Source Code"
+"Source Code" means the preferred form of a work for making modifications to it.
+For compiled, generated, packaged, embedded, or otherwise transformed software, Source Code includes the source material reasonably necessary to reproduce the corresponding executable form and to make further modifications.
+0.7 "Corresponding Source"
+"Corresponding Source" means the complete Source Code of the Covered Work, including all modifications and all other material reasonably necessary to build, install, reproduce, modify, and operate the corresponding form of the Covered Work.
+Corresponding Source includes, where applicable:
+source files;
+interface definitions;
+build scripts;
+build configuration;
+package manifests;
+dependency declarations;
+code-generation sources necessary for reproduction;
+installation scripts;
+deployment scripts necessary to reproduce the Covered Work;
+configuration necessary to reproduce the Covered Work where such configuration constitutes part of the Covered Work; and
+other source material ordinarily used to produce the corresponding executable form.
+Corresponding Source does not include:
+System Libraries;
+generally available tools that are used unmodified and are not themselves part of the Covered Work;
+information that is automatically and mechanically reproducible from other Corresponding Source and whose independent publication is unnecessary for reproduction; or
+material that is not part of the Covered Work and is not reasonably necessary to reproduce it.
+0.8 "Object Code"
+"Object Code" means any form of a Covered Work other than Source Code.
+This includes compiled binaries, executables, firmware, packaged applications, container images, machine-readable distributions, and other executable or non-source forms.
+0.9 "Convey"
+To "Convey" a work means to transfer a copy of the work to another person or entity in a manner that permits that person or entity to possess or obtain a copy.
+Conveyance includes distribution, sale, transfer, publication of downloadable copies, and other acts by which another party obtains a copy.
+Mere interaction with a Covered Work through a computer network, without transfer of a copy, is not by itself Conveyance.
+0.10 "Network Interaction"
+"Network Interaction" means interaction with a Covered Work through a computer network where the Covered Work performs functionality for or provides functionality directly to a user who is not operating the Covered Work exclusively on their own local device.
+0.11 "Publish"
+To "Publish" Corresponding Source means to make the Corresponding Source publicly available in a manner that permits any member of the public to obtain, inspect, copy, modify, and redistribute it under this License.
+Corresponding Source is not "Published" if access requires:
+employment;
+membership;
+customer status;
+contractual relationship;
+confidentiality agreement;
+special permission;
+individualized approval;
+business justification;
+payment for access to the Source Code itself; or
+another restriction that prevents unrestricted public access.
+A public source repository, publicly accessible source archive, or equivalent mechanism is sufficient.
+0.12 "Publicly Available"
+"Publicly Available" means accessible to members of the general public without discrimination based upon identity, affiliation, employment, location, purpose, or intended use.
+A source repository may require ordinary technical mechanisms necessary to access the repository, but may not restrict access to a limited class of persons.
+0.13 "Upstream Repository"
+"Upstream Repository" means the publicly accessible source-control repository or equivalent authoritative source location from which the Covered Work, or the version upon which the Covered Work is based, was obtained or derived.
+Where a Covered Work is derived from a fork rather than directly from an original project, the repository of that fork is an Upstream Repository for purposes of this License, and the original upstream project should also be identified where reasonably practicable.
+Where a Covered Work is derived from multiple repositories, each relevant repository must be identified.
+0.14 "Licensee"
+"Licensee" and "you" mean any individual or legal entity exercising rights granted by this License.
+0.15 "Copyright Holder"
+"Copyright Holder" means the person or entity that owns or controls the copyright in the Program and grants this License.
+0.16 "System Library"
+A "System Library" means a component that is ordinarily distributed with the operating system, compiler, runtime environment, or other platform on which the Covered Work runs and that is not itself part of the Covered Work, or another component that merely enables use of the Covered Work with that platform without itself constituting part of the Covered Work.
+Whether a component is a System Library is determined by its actual relationship to the Covered Work and not merely by how it is packaged or named.
+1. Basic Permissions
+Subject to the conditions of this License, you are granted a perpetual, worldwide, non-exclusive, royalty-free copyright license to:
+use the Program;
+study the Program;
+copy the Program;
+Modify the Program;
+create Covered Works;
+Convey Covered Works;
+Publish Corresponding Source;
+charge any price for copies, support, hosting, development, modification, or other services involving Covered Works; and
+use Covered Works for commercial, private, educational, governmental, organizational, or other purposes.
+These permissions are granted only subject to the conditions of this License.
+No permission is granted under this License to create, maintain, or use a proprietary Modified Work while withholding its Corresponding Source from the public.
+2. Conditional Modification Permission
+2.1 Modification Is Conditional
+The permission to Modify a Covered Work is expressly conditioned upon compliance with this License's universal source-publication requirements.
+You may Modify a Covered Work only if you make the complete Corresponding Source of the resulting Modified Work publicly available under this License.
+The right to Modify a Covered Work is therefore not an unconditional right to create a private or proprietary fork.
+2.2 No Private Modification Exception
+This License grants no permission to create or maintain a Modified Work whose Corresponding Source is withheld from the public.
+There is no exception based upon:
+private use;
+personal use;
+internal use;
+enterprise use;
+corporate use;
+governmental use;
+educational use;
+non-commercial use;
+commercial use;
+confidential use;
+trade-secret status;
+geographic location;
+number of users;
+number of employees;
+network isolation;
+lack of Internet connectivity;
+lack of Conveyance;
+lack of Network Interaction; or
+any other deployment environment.
+2.3 Modification and Use
+If you Modify a Covered Work, you must Publish the Corresponding Source of that Modified Work.
+You may then use, Convey, operate, host, sell, distribute, or otherwise exploit the Modified Work subject to this License.
+If you do not wish to Publish the Corresponding Source, you may not rely upon the modification permission granted by this License to create or use the Modified Work.
+2.4 No Proprietary Fork
+A person or entity exercising the modification permission granted by this License may not characterize the resulting Modified Work as:
+proprietary;
+confidential;
+internal;
+private;
+enterprise-only;
+trade secret;
+undistributed;
+closed source; or
+otherwise exempt from public source availability
+for the purpose of avoiding this License.
+3. Universal Source Publication
+3.1 General Requirement
+Whenever you create a Modified Work under the permission granted by this License, you must Publish its complete Corresponding Source under this License.
+This obligation arises from the act of exercising the modification permission.
+It does not depend upon Conveyance or Network Interaction.
+3.2 Timing
+You must Publish the Corresponding Source promptly after creating the Modified Work and before relying upon the Modified Work for continued ordinary use.
+The Published Corresponding Source must correspond to the actual Modified Work being used.
+If the Modified Work is subsequently Modified again, the resulting Corresponding Source must likewise be Published.
+3.3 Continued Availability
+You must keep the Corresponding Source publicly available for as long as the corresponding Modified Work remains in ordinary use, and for a reasonable period thereafter sufficient to allow members of the public to obtain the corresponding version.
+Nothing in this requirement obligates you to provide maintenance, technical support, hosting, or future development.
+3.4 Public Access
+The Corresponding Source must be available to the public without requiring:
+an employment relationship;
+a customer relationship;
+a membership;
+a confidentiality agreement;
+special authorization;
+an individual request for permission;
+payment for access to the Source Code itself; or
+acceptance of restrictions inconsistent with this License.
+3.5 Actual Source
+Publishing a different version, an incomplete version, a clean upstream version, or source from which the Modified Work cannot reasonably be reproduced does not satisfy this requirement.
+The Published Corresponding Source must correspond to the Modified Work actually created and used.
+4. Modifications Performed by Others
+You may not avoid the requirements of this License by having another person or entity perform the modification on your behalf.
+This includes modifications performed by:
+employees;
+contractors;
+consultants;
+subsidiaries;
+parent companies;
+affiliates;
+development firms;
+hosting providers;
+managed-service providers; or
+other agents.
+If a Modified Work is created on your behalf under the modification permission granted by this License, the resulting Corresponding Source must be Published under this License.
+Changing the identity of the person performing the modification does not create a private-modification exception.
+5. Deployment Environment
+The obligations of this License apply regardless of the environment in which a Covered Work is used.
+They apply equally to Covered Works that are:
+installed on personal computers;
+installed on corporate computers;
+deployed to servers;
+deployed to cloud infrastructure;
+deployed in virtual machines;
+deployed in containers;
+embedded in hardware;
+operated as backend software;
+operated behind an API;
+operated behind a firewall;
+operated on a private network;
+operated on an isolated network;
+operated on an air-gapped network;
+operated as a local application;
+operated as a hosted service; or
+otherwise deployed.
+No change in deployment environment eliminates the conditions attached to the modification permission.
+6. Network Services
+Because CEASE's source-publication requirement is triggered by modification rather than network deployment, Network Interaction does not create a separate exemption or trigger.
+However, if you operate a Covered Work as a network service, you must additionally provide users who interact with the Covered Work over a computer network with a clear and reasonably accessible means of obtaining the Corresponding Source for the version of the Covered Work operating the service.
+A suitable mechanism may include:
+a "Source Code" link;
+a link to a public source repository;
+a downloadable source archive; or
+another mechanism providing equivalent access.
+The source provided must correspond to the version actually operating the service.
+This requirement applies regardless of whether the service is:
+public;
+private;
+commercial;
+internal;
+paid;
+free;
+authenticated;
+geographically restricted; or
+otherwise limited.
+Section 6 does not limit the universal source-publication requirement in Section 3.
+7. License and Source Notice With Every Conveyed Copy
+Every copy of a Covered Work that is Conveyed must be accompanied by:
+a complete copy of this License;
+a prominent notice identifying the Covered Work as licensed under CEASE;
+a publicly accessible location from which the Corresponding Source for that copy may be obtained;
+the Upstream Repository information required by this License; and
+where reasonably practicable, the specific upstream version, release, tag, branch, commit, revision, or other identifier from which the Covered Work is derived.
+The License may be provided in physical or electronic form, provided that the recipient can reasonably access and retain a complete copy of it.
+A reference to another website that merely describes this License does not satisfy the requirement to provide the License itself.
+8. Upstream Repository Disclosure
+For every Covered Work that is Conveyed, the Conveying party must provide a direct link to the Upstream Repository from which the conveyed version is derived.
+The link must point to the actual upstream source repository or another publicly accessible source-control location maintained for the project.
+Where reasonably practicable, the notice must identify:
+the Upstream Repository;
+the upstream branch;
+tag;
+release;
+revision; or
+commit
+corresponding to the version from which the Covered Work is derived.
+If multiple Upstream Repositories materially contribute to the Covered Work, all relevant repositories must be identified.
+If the Covered Work is derived from a fork, the repository of the fork must be identified, together with the original upstream project where reasonably practicable.
+9. Direct Source Access
+The Upstream Repository notice must provide a direct and reasonably accessible means for the recipient to obtain the upstream software.
+A generic search-engine result, software-marketplace search, documentation page, corporate homepage, or other intermediary location does not satisfy this requirement where a direct repository location is reasonably available.
+The purpose of this requirement is to permit a recipient to independently locate, inspect, obtain, build, modify, and compare the upstream software without relying upon the Conveying party.
+10. Commercial Sales
+You may sell, license, host, distribute, package, bundle, rent, subscribe, or otherwise commercially provide Covered Works.
+You may charge any price you choose.
+You may charge for:
+the Covered Work;
+physical media;
+packaging;
+installation;
+configuration;
+customization;
+support;
+maintenance;
+hosting;
+warranties;
+hardware;
+consulting;
+training; or
+any combination of these services and products.
+However, commercial value does not permit concealment of the software's origin.
+A commercial sale of a Covered Work must comply with all requirements of this License, including the requirements to provide the License, identify the Corresponding Source, and identify the Upstream Repository.
+11. Point-of-Sale Disclosure
+If a Covered Work is offered for sale, licensing, subscription, rental, hosting, or other commercial acquisition, the required License, Corresponding Source, and Upstream Repository information must be presented to the prospective purchaser before the transaction is completed.
+The disclosure must be reasonably prominent and reasonably accessible.
+The disclosure must not be hidden solely in:
+a post-purchase download page;
+an inaccessible legal-information page;
+a buried terms-of-service document;
+documentation that the purchaser is unlikely to encounter before purchase;
+source code that the purchaser must independently locate; or
+a separate request made after payment.
+For online sales, the required information must be accessible from the product, service, or purchase page before the purchaser completes the transaction.
+For physical sales, the required information must be provided on the product packaging, accompanying documentation, a prominently displayed physical notice, or another durable mechanism that is reasonably accessible before purchase.
+For software distributed through an application marketplace or similar platform, the required information must be provided through the marketplace listing or another mechanism that is presented to the purchaser before acquisition where the platform permits such information to be displayed.
+12. Required Commercial Notice
+A commercial offering of a Covered Work must include a notice substantially equivalent to:
+This product contains software licensed under CEASE.
+You may obtain the CEASE license and the Corresponding Source for this version here:
+[CORRESPONDING SOURCE URL]
+The upstream project from which this software is derived is available here:
+[UPSTREAM REPOSITORY URL]
+You are not required to purchase this product in order to obtain the underlying CEASE-covered software.
+The notice may contain additional information, branding, product descriptions, pricing, and commercial material, provided that the required information remains clear and reasonably accessible.
+13. No Concealment of the Upstream Project
+A seller may distinguish its product from the upstream software through:
+branding;
+user-interface changes;
+additional functionality;
+support;
+documentation;
+integration;
+hardware;
+packaging;
+configuration;
+customization;
+professional services; or
+other legitimate commercial value.
+However, the seller may not represent the Covered Work as wholly proprietary software where doing so would conceal its CEASE-covered origin.
+A seller may not intentionally obscure, remove, redirect, or make materially more difficult the recipient's ability to locate the Upstream Repository.
+14. No Purchase Requirement for the Underlying Software
+A commercial seller may charge for its product and services.
+However, the seller may not condition access to the publicly available Corresponding Source or the upstream CEASE-covered software upon purchase of the seller's product.
+The seller may not represent that purchasing the commercial product is the only lawful means by which a person may obtain the underlying CEASE-covered software.
+Nothing in this Section requires the seller to provide its own unrelated services, proprietary hardware, commercial support, hosted infrastructure, or other independent commercial offerings without charge.
+15. Modified Commercial Versions
+If a seller Conveys a Modified Work commercially, the seller must make the Corresponding Source of that Modified Work publicly available under CEASE.
+The seller must additionally identify:
+the Upstream Repository;
+the upstream revision, tag, branch, release, or commit from which the Modified Work was derived, where reasonably practicable;
+the public location containing the seller's Corresponding Source;
+the fact that the seller's version contains modifications; and
+where reasonably practicable, a clear description of the principal modifications made by the seller.
+The seller may charge for the commercial Modified Work.
+The seller may not charge for public access to the Corresponding Source itself.
+16. Point-of-Sale Source Comparison
+The purpose of this Section is to ensure that a prospective purchaser can reasonably determine what value is being provided by a commercial Covered Work.
+Accordingly, the required Upstream Repository and Corresponding Source links must be presented in a manner that permits the purchaser to compare the offered product with the underlying software before completing the purchase.
+A commercial seller may explain and promote its modifications and additional services.
+It may not conceal the availability of the underlying CEASE-covered software in order to create the false impression that purchasing the commercial offering is necessary to obtain substantially equivalent functionality.
+A seller may compete on convenience, quality, support, integration, reliability, maintenance, performance, security, packaging, hardware, or other legitimate commercial grounds.
+CEASE does not require a seller to provide its own value-added services without charge.
+17. Physical Products
+Where a Covered Work is incorporated into a physical product, the required notices may be provided through:
+printed documentation;
+a durable label;
+a product information card;
+a display accompanying the product;
+a QR code that directly resolves to the required information; or
+another durable mechanism that provides equivalent access.
+A QR code or similar mechanism may be used only if the resulting destination provides direct access to the required License, Corresponding Source, and Upstream Repository information.
+A QR code that merely directs the purchaser to a generic corporate homepage does not satisfy this requirement.
+18. Software-as-a-Service and Hosted Products
+If a Covered Work is offered as part of a hosted service, the operator must make the required CEASE License, Corresponding Source, and Upstream Repository information accessible to users and prospective customers.
+Commercial hosting does not eliminate the requirement to disclose the underlying software.
+The operator may charge for access to the hosted service.
+The operator may not charge for access to the publicly available Corresponding Source.
+19. Persistent Availability of Disclosure
+The information required by Sections 7 through 18 must remain publicly accessible for as long as the corresponding commercial Covered Work is being offered or distributed.
+If a commercial product is discontinued, the seller should retain the required public source and upstream information for a reasonable period sufficient to permit recipients to obtain the corresponding materials.
+Removal of a product from active sale does not authorize removal of Corresponding Source that is otherwise required to remain publicly available under this License.
+20. Changes to Repository Location
+If a required repository is moved, renamed, migrated, or otherwise relocated, the Conveying party must update the relevant public notices where reasonably practicable.
+A temporary repository failure does not by itself constitute a violation if reasonable efforts are being made to restore access.
+A seller may maintain a permanent mirror of the required source to ensure continued availability.
+A mirror does not replace the requirement to identify the Upstream Repository.
+21. Conveying Source Code
+You may Convey the Program or a Modified Work in Source Code form provided that:
+appropriate copyright notices are preserved;
+notices identifying this License are preserved;
+notices concerning the absence of warranty are preserved;
+recipients receive a complete copy of this License;
+Modified Works are identified as modified;
+the applicable Corresponding Source is Published under this License;
+the Upstream Repository is identified;
+the relevant upstream revision is identified where reasonably practicable; and
+no additional restriction is imposed that prevents recipients from exercising the rights granted by this License.
+You may charge any price for copies of Source Code.
+Charging a fee for support, hosting, physical media, development, customization, or other services does not violate this License.
+22. Conveying Object Code
+You may Convey a Covered Work in Object Code form only if:
+the Covered Work remains licensed under this License;
+the applicable Corresponding Source has been Published;
+recipients are informed how to obtain the Corresponding Source;
+the complete CEASE License accompanies the Covered Work;
+the Upstream Repository is identified;
+the relevant upstream revision is identified where reasonably practicable;
+copyright notices and license notices are preserved;
+any required installation information is provided where applicable; and
+no additional restriction prevents recipients from exercising their rights under this License.
+The Corresponding Source may be Published through a publicly accessible network location or another reasonable mechanism.
+You are not required to provide physical copies of Source Code where a publicly accessible source location provides equivalent access.
+23. Modified Source Versions
+If you Convey a Modified Work in Source Code form, the Modified Work must:
+prominently identify that it has been modified;
+identify the date of modification where reasonably practicable;
+identify this License;
+retain applicable copyright notices;
+identify the Upstream Repository;
+identify the upstream revision where reasonably practicable;
+be licensed as a whole under this License to recipients of the Covered Work, subject to applicable exceptions for independent works;
+preserve notices required by this License; and
+provide access to the Corresponding Source.
+A Modified Work may contain additional independent works that are not themselves Covered Works.
+Such independent works remain governed by their own applicable licenses.
+24. Aggregation
+A Covered Work may be distributed together with other separate and independent works in a larger collection.
+The mere inclusion of an independent work alongside a Covered Work does not cause the independent work to become subject to this License.
+Examples include:
+separate programs distributed on the same storage medium;
+separate applications distributed in the same operating system;
+separate containers distributed together;
+separate services communicating through ordinary interfaces; and
+separate programs bundled into a larger distribution without forming a single derivative work.
+However, combining a Covered Work with another work in a manner that creates a derivative work may cause the resulting work to become a Covered Work.
+Packaging alone does not determine whether a work is independent.
+25. Interfaces and Interoperability
+A program that merely communicates with a Covered Work through:
+an API;
+a network protocol;
+a command-line interface;
+an operating-system interface;
+an ordinary data format;
+an inter-process communication mechanism; or
+another standard interface
+does not become a Covered Work solely because of that communication.
+Likewise, merely communicating with or interoperating with a Covered Work does not, by itself, make an otherwise independent work subject to this License.
+This Section does not provide permission to circumvent the copyleft requirements applicable to a work that is otherwise a Covered Work.
+26. Plugins, Extensions, and Modules
+A plugin, extension, module, or other component that is a Covered Work is subject to this License.
+A component that merely communicates with the Covered Work through an ordinary interface and does not constitute a derivative work remains independent.
+The determination of whether a component constitutes a Covered Work depends upon its actual relationship to the Covered Work and applicable copyright law, rather than solely upon whether the component is loaded dynamically, statically linked, interpreted, compiled, embedded, or otherwise integrated.
+Changing the technical mechanism of integration does not by itself create an exemption from copyleft.
+27. Installation and User Modification
+Where applicable law and the nature of the Covered Work require information necessary to install and execute modified versions of a Covered Work in a product, that information must be provided where necessary to permit recipients to exercise the rights granted by this License.
+This requirement does not obligate you to provide:
+ongoing support;
+warranties;
+maintenance;
+future updates;
+physical access to hardware not ordinarily required for installation; or
+unrelated proprietary information.
+Nothing in this License requires disclosure of private cryptographic keys or other information that is not part of the Covered Work and is not reasonably necessary to exercise rights granted by this License.
+
+28. Anti-Circumvention
+No Covered Work shall be treated as an effective technological measure for purposes of preventing lawful exercise of the rights granted by this License, to the extent applicable law permits such a provision.
+You may not use technological restrictions, contractual restrictions, access controls, authentication systems, encryption mechanisms, or other measures for the purpose of preventing recipients from exercising rights granted by this License.
+This Section does not require disclosure of security credentials unrelated to the Covered Work.
+29. Additional Permissions
+The Copyright Holder may grant additional permissions that supplement the terms of this License.
+Additional permissions may remove particular restrictions imposed by this License.
+Additional permissions must not be interpreted as removing the fundamental rights granted by this License unless the Copyright Holder expressly states otherwise.
+A recipient is not required to accept an additional permission.
+Additional permissions may apply to:
+particular versions;
+particular components;
+particular platforms;
+particular distributions;
+particular uses; or
+particular recipients.
+30. Patents
+Each contributor grants you a worldwide, non-exclusive, royalty-free patent license under patent claims that the contributor can license and that are necessarily infringed by the contributor's contribution to the Covered Work.
+This patent license applies only to the extent necessary to exercise the rights granted by this License with respect to the contributor's contribution.
+If you initiate patent litigation against another party alleging that the Covered Work, or a contribution incorporated into it, infringes a patent, the patent license granted to you under this License terminates as to the Covered Work implicated by that litigation, to the extent permitted by applicable law.
+This Section does not grant rights to patents unrelated to the contributor's contribution.
+31. No Additional Restrictions
+You may not impose additional restrictions on the exercise of rights granted by this License.
+In particular, you may not require:
+royalties for exercising rights granted by this License;
+permission to Modify a Covered Work;
+permission to Publish Corresponding Source;
+prohibition of redistribution;
+acceptance of additional license terms as a condition of exercising rights granted by this License; or
+restrictions designed to defeat the copyleft requirements of this License.
+This does not prohibit ordinary agreements concerning unrelated services, support, warranties, hosting, employment, or other matters that do not restrict rights granted by this License.
+32. Attribution and Modification Notices
+You must preserve reasonable copyright notices contained in the Covered Work.
+Modified Works must carry reasonable notices indicating that modifications have been made.
+Such notices should identify the person or entity responsible for the modification where reasonably practicable and should include the relevant modification date where reasonably practicable.
+You may add additional attribution for your own contributions.
+You may not falsely claim authorship of another person's contribution.
+This License does not require advertising or endorsement.
+33. Trademarks
+This License does not grant permission to use trademarks, service marks, trade names, logos, or other branding belonging to a Copyright Holder except as necessary to accurately identify the origin of the Covered Work or as otherwise permitted by applicable law.
+Trademark restrictions do not restrict your rights to Modify, Publish, or Convey the Covered Work under this License.
+34. Termination
+Your rights under this License terminate automatically if you materially violate its conditions.
+A material violation includes, without limitation:
+creating a Modified Work under the permission granted by this License while intentionally withholding its Corresponding Source from the public;
+falsely claiming that a Modified Work is exempt from the universal source-publication requirement;
+Conveying a Covered Work without the required License and source notices;
+Conveying a Covered Work without the required Upstream Repository disclosure;
+commercially offering a Covered Work without the required point-of-sale disclosures;
+imposing additional restrictions prohibited by this License; or
+otherwise materially violating the conditions of this License.
+If you cease all violation of this License, your permissions are automatically reinstated:
+provisionally, unless and until the Copyright Holder explicitly and finally terminates your rights; or
+permanently, if the Copyright Holder does not notify you of the violation within a reasonable period after your cessation.
+Rights previously granted to downstream recipients who remain compliant with this License are not automatically terminated merely because another recipient violates this License.
+A Copyright Holder may permanently terminate your rights only after you have been given a reasonable opportunity to correct the violation, except where applicable law permits otherwise.
+Termination does not invalidate rights independently acquired by other recipients who received the Covered Work lawfully and remain compliant with this License.
+35. Acceptance
+You are not required to accept this License merely to receive or execute an unmodified copy of the Program.
+However, no permission is granted to exercise copyright-controlled rights in the Covered Work except under this License or another permission separately granted by the applicable Copyright Holder.
+In particular, the modification permission granted by this License is conditional upon compliance with the universal source-publication requirements of this License.
+By exercising rights granted by this License, you accept its applicable conditions.
+Nothing in this License is intended to restrict rights that applicable law makes impossible for a copyright holder to restrict.
+36. Revised Versions of CEASE
+CEASE Publishers may publish revised and/or new versions of the CEASE license from time to time.
+Each version will have a distinguishing version number.
+If a Covered Work specifies that it is licensed under:
+CEASE Version 1.0 or any later version
+you may choose to follow the terms and conditions of Version 1.0 or any later version of CEASE published by CEASE Publishers.
+If a Covered Work specifies only:
+CEASE Version 1.0
+you may use only Version 1.0 unless the Copyright Holder separately grants permission to use a later version.
+A later version of CEASE may contain additional or different permissions and obligations.
+Choosing to use a later version does not retroactively change the license governing copies held by recipients who choose to remain under an earlier permitted version.
+A later version may not impose additional obligations upon a person who elects to remain under an earlier version that the Covered Work expressly permits.
+37. Compatibility with GNU GPLv3 and GNU AGPLv3
+A Covered Work may be combined with a work licensed under:
+the GNU General Public License, Version 3; or
+the GNU Affero General Public License, Version 3,
+where the resulting combination can lawfully be distributed under the applicable licenses.
+The CEASE-covered portion remains subject to CEASE.
+The GPL-covered portion remains subject to GPLv3.
+The AGPL-covered portion remains subject to AGPLv3.
+Where a combination creates a single work and the applicable licenses impose requirements that cannot simultaneously be satisfied, the combination may not be Conveyed unless sufficient permission has been obtained from the applicable Copyright Holders.
+Nothing in this Section independently relicenses copyrighted material.
+Nothing in this Section permits a party to remove CEASE's universal source-publication requirement from a CEASE-covered work.
+Where AGPLv3's network-interaction requirements apply to a combined work, those requirements continue to apply to the AGPL-covered portions and the combination as required by AGPLv3.
+38. No Surrender of Others' Freedom
+If conditions are imposed upon you by contract, court order, regulation, or other obligation that contradict the conditions of this License, those conditions do not excuse you from compliance with this License.
+If you cannot satisfy the requirements of this License and another applicable obligation simultaneously, you must refrain from exercising the rights granted by this License to the extent necessary to avoid violating either obligation.
+You may not use a contractual relationship, confidentiality obligation, trade-secret obligation, corporate structure, or other external restriction as a means of defeating the source-publication requirements of this License.
+39. No Warranty
+THE COVERED WORK IS PROVIDED WITHOUT WARRANTY OF ANY KIND, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW.
+UNLESS OTHERWISE AGREED IN WRITING, THE COPYRIGHT HOLDERS AND CONTRIBUTORS PROVIDE THE COVERED WORK "AS IS" WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY, OR OTHERWISE, INCLUDING, WITHOUT LIMITATION, WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT.
+THE ENTIRE RISK AS TO THE QUALITY, PERFORMANCE, SECURITY, AND USE OF THE COVERED WORK IS WITH YOU.
+SHOULD THE COVERED WORK PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR, CORRECTION, OR RECOVERY.
+40. Limitation of Liability
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NO COPYRIGHT HOLDER OR CONTRIBUTOR SHALL BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, CONSEQUENTIAL, OR OTHER DAMAGES ARISING FROM THE USE OF OR INABILITY TO USE THE COVERED WORK, INCLUDING LOSS OF DATA, LOSS OF PROFITS, LOSS OF BUSINESS, SERVICE INTERRUPTION, SECURITY INCIDENTS, SECURITY VULNERABILITIES, OR OTHER COMMERCIAL OR NON-COMMERCIAL DAMAGES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+41. Severability
+If any provision of this License is determined to be invalid, unlawful, or unenforceable in a particular jurisdiction, that provision shall be interpreted to the maximum extent permitted by law.
+If the provision cannot be so interpreted, it shall be severed to the minimum extent necessary.
+The remaining provisions of this License shall remain in effect.
+No invalid provision shall be interpreted in a manner that creates a broader private-use or private-modification exception than is expressly stated in this License.
+42. Entire License
+This License constitutes the complete terms governing the copyright permissions granted for the Covered Work, except for additional permissions expressly granted by the Copyright Holder.
+No waiver of a provision of this License is effective unless granted by the applicable Copyright Holder.
+43. Statutory Rights
+Nothing in this License is intended to restrict rights that cannot lawfully be restricted under applicable law.
+This includes rights arising independently of copyright, including applicable rights of fair use, fair dealing, exhaustion, interoperability, security research, reverse engineering, repair, or other statutory limitations and exceptions.
+Where applicable law grants a right independently of this License, exercise of that right does not constitute acceptance of a broader permission under this License.
+This License grants permissions in addition to rights that cannot legally be restricted rather than attempting to eliminate those rights.
+44. Fundamental CEASE Principle
+The fundamental principle of CEASE is:
+If you modify CEASE software under the permission granted by this License, you must publish the corresponding source.
+This principle applies regardless of:
+whether the modification is private;
+whether the modification is internal;
+whether the modification is commercial;
+whether the modification is non-commercial;
+whether the software is distributed;
+whether the software is hosted;
+whether the software is networked;
+whether the software is operated locally;
+whether the software is used by one person;
+whether the software is used by an organization;
+whether the organization is a corporation, government, school, nonprofit, or other entity; or
+whether the resulting Modified Work is ever provided to another person.
+There is no private fork under CEASE.
+The fundamental commercial principle is:
+CEASE does not prohibit anyone from making money from CEASE software. It prohibits making the underlying CEASE software artificially unavailable as a condition of doing so.
+A seller may say:
+"Buy our version because we made it easier, better supported, integrated, packaged, customized, maintained, or otherwise more useful."
+A seller may not say, in substance:
+"Buy this software because you have no practical way to obtain the underlying software."
+The purchaser must be told, before purchase, where the underlying CEASE-covered software, its Corresponding Source, and its Upstream Repository can be obtained.
+45. Copyright and License Notice
+The name CEASE, the phrase Cassi's Copyleft Environment Agnostic Software Enforcement License, and the official version numbers of this License identify this license.
+This License may be copied and distributed verbatim so that software can be properly licensed under it.
+Modified versions of this License text may not be represented as official versions of CEASE without permission from CEASE Publishers.
+How to Apply CEASE to a Program
+To license a program under CEASE, place a copyright notice identifying the copyright holder in the relevant source files and include a notice substantially similar to the following:
+Copyright © [YEAR] [COPYRIGHT HOLDER]
+This program is free software: you can redistribute it and/or modify it under the terms of the Cassi's Copyleft Environment Agnostic Software Enforcement License, either Version 1.0, or (at your option) any later version.
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the CEASE license for more details.
+You should have received a copy of the CEASE license along with this program. If not, see [OFFICIAL CEASE LICENSE LOCATION].
+Upstream Repository: [UPSTREAM REPOSITORY URL]
+Upstream Revision: [UPSTREAM VERSION / TAG / COMMIT]
+If the program is intended to remain permanently under CEASE Version 1.0, replace:
+"Version 1.0, or (at your option) any later version"
+with:
+"Version 1.0 only."
+Recommended SPDX-Style Identifier
+Until CEASE has an officially registered SPDX identifier, projects should identify the license as:
+CEASE-1.0
+This identifier is descriptive only and does not constitute an SPDX registration.
+Recommended Repository Notice
+Projects using CEASE may place the following notice in their repository:
+License: CEASE 1.0
+This project is licensed under the Cassi's Copyleft Environment Agnostic Software Enforcement License (CEASE), Version 1.0, or any later version where expressly permitted.
+CEASE requires the Corresponding Source of Modified Works to be publicly available. This requirement applies regardless of whether the Modified Work is distributed, privately used, internally deployed, commercially operated, or provided as a network service.
+There is no private-modification exception under CEASE.
+Upstream Repository: [UPSTREAM REPOSITORY URL]
+Corresponding Source: [CORRESPONDING SOURCE URL]
+Recommended Point-of-Sale Notice
+A commercial seller may use the following notice:
+CEASE SOFTWARE DISCLOSURE
+This product contains software licensed under the Cassi's Copyleft Environment Agnostic Software Enforcement License (CEASE).
+CEASE License: [CEASE LICENSE URL]
+Corresponding Source for this version: [CORRESPONDING SOURCE URL]
+Upstream Repository: [UPSTREAM REPOSITORY URL]
+Upstream Revision: [UPSTREAM VERSION / TAG / COMMIT]
+The underlying CEASE-covered software is publicly available and may be obtained, modified, and redistributed in accordance with the CEASE license.
+Purchase of this product is not required to obtain the underlying CEASE-covered software.
+END OF CEASE VERSION 1.0

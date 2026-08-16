@@ -1,0 +1,46 @@
+plugins {
+    id("java-library")
+    id("fabric-loom") version "1.9.2"
+}
+
+base {
+    archivesName = "authsuite-fabric"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+}
+
+repositories {
+    mavenCentral()
+}
+
+loom {
+    // Use official (Mojang) mappings so the Fabric port mirrors the NeoForge/Forge
+    // module 1:1 (identical class/method names). Loom remaps to intermediary at
+    // runtime via the generated refmap.
+}
+
+dependencies {
+    implementation(project(":authsuite-common"))
+
+    minecraft("com.mojang:minecraft:${minecraft_version_1_20_6}")
+    mappings(loom.officialMojangMappings())
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version_1_20_6}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version_1_20_6}")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.yaml:snakeyaml:2.2")
+}
+
+processResources {
+    inputs.property("version", project.version)
+    filesMatching("fabric.mod.json") {
+        expand("version": project.version)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 21
+}

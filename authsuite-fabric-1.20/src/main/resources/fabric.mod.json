@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "authsuite",
+  "version": "${version}",
+  "name": "AuthSuite",
+  "description": "AuthSuite: multi-provider hybrid identity, server-directed skins and isolated permissions.",
+  "authors": [
+    "AuthSuite Contributors"
+  ],
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.authsuite.fabric.AuthSuiteFabric"
+    ],
+    "client": [
+      "net.authsuite.fabric.client.AuthSuiteFabricClient"
+    ]
+  },
+  "mixins": [
+    "authsuite.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric-api": "*",
+    "minecraft": "1.20",
+    "java": ">=17"
+  }
+}

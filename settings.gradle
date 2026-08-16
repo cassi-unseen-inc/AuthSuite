@@ -1,0 +1,126 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        mavenLocal()
+        maven {
+            name = "NeoForged"
+            url = "https://maven.neoforged.net/releases"
+        }
+        maven {
+            name = "MinecraftForge"
+            url = "https://maven.minecraftforge.net/"
+        }
+        maven {
+            name = "FabricMC"
+            url = "https://maven.fabricmc.net/"
+        }
+    }
+}
+
+rootProject.name = "authsuite"
+
+include("authsuite-common")
+
+// Java 8 source-compatible variant of the common core, consumed by the 1.16.5 tier.
+include("authsuite-common-legacy")
+
+// ---- 1.21.1 ----
+include("authsuite-neoforge-1.21.1")
+include("authsuite-fabric-1.21.1")
+include("authsuite-forge-1.21.1")
+
+// ---- 1.20.1 ----
+// NeoForge 1.20.1 is an abandoned fork of Forge 47.x (net.neoforged:forge);
+// Forge 1.20.1 is its maintained equivalent, so only Forge + Fabric ship here.
+include("authsuite-fabric-1.20.1")
+include("authsuite-forge-1.20.1")
+
+// ---- 1.19.4 ----
+include("authsuite-fabric-1.19.4")
+include("authsuite-forge-1.19.4")
+
+// ---- 1.18.2 ----
+include("authsuite-fabric-1.18.2")
+include("authsuite-forge-1.18.2")
+
+// ---- 1.17.1 ----
+include("authsuite-fabric-1.17.1")
+include("authsuite-forge-1.17.1")
+
+// ---- 1.16.5 ----
+include("authsuite-fabric-1.16.5")
+include("authsuite-forge-1.16.5")
+
+// ---- 1.16.4 ----
+include("authsuite-fabric-1.16.4")
+include("authsuite-forge-1.16.4")
+
+// ---- 1.16.3 ----
+include("authsuite-fabric-1.16.3")
+include("authsuite-forge-1.16.3")
+
+// ---- 1.16.2 ----
+include("authsuite-fabric-1.16.2")
+include("authsuite-forge-1.16.2")
+
+// ---- 1.16.1 ----
+include("authsuite-fabric-1.16.1")
+include("authsuite-forge-1.16.1")
+
+// ---- 1.17 ----
+// Forge has no 1.17 build (only 1.17.1); Fabric ships.
+include("authsuite-fabric-1.17")
+
+// ---- 1.18 ----
+include("authsuite-fabric-1.18")
+include("authsuite-forge-1.18")
+
+// ---- 1.18.1 ----
+include("authsuite-fabric-1.18.1")
+include("authsuite-forge-1.18.1")
+
+// ---- 1.19 ----
+include("authsuite-fabric-1.19")
+include("authsuite-forge-1.19")
+
+// ---- 1.19.1 ----
+include("authsuite-fabric-1.19.1")
+include("authsuite-forge-1.19.1")
+
+// ---- 1.19.2 ----
+include("authsuite-fabric-1.19.2")
+include("authsuite-forge-1.19.2")
+
+// ---- 1.19.3 ----
+include("authsuite-fabric-1.19.3")
+include("authsuite-forge-1.19.3")
+
+// ---- 1.20 ----
+include("authsuite-fabric-1.20")
+include("authsuite-forge-1.20")
+
+// ---- 1.20.2 ----
+// Forge ended at 1.20.1; NeoForge 1.20.2+ is the maintained loader.
+include("authsuite-fabric-1.20.2")
+include("authsuite-neoforge-1.20.2")
+
+// ---- 1.20.3 ----
+include("authsuite-fabric-1.20.3")
+include("authsuite-neoforge-1.20.3")
+
+// ---- 1.20.4 ----
+include("authsuite-fabric-1.20.4")
+include("authsuite-neoforge-1.20.4")
+
+// ---- 1.20.5 ----
+include("authsuite-fabric-1.20.5")
+include("authsuite-neoforge-1.20.5")
+
+// ---- 1.20.6 ----
+include("authsuite-fabric-1.20.6")
+include("authsuite-neoforge-1.20.6")
+
+// ---- 1.21 ----
+include("authsuite-fabric-1.21")
+include("authsuite-neoforge-1.21")

@@ -1,0 +1,29 @@
+modLoader = "javafml"
+loaderVersion = "[44,)"
+license = "MIT"
+issueTrackerUrl = "https://github.com/mods/authsuite/issues"
+
+[[mods]]
+modId = "${mod_id}"
+version = "${version}"
+displayName = "AuthSuite"
+authors = "AuthSuite Contributors"
+credits = "AuthSuite Contributors"
+description = '''
+AuthSuite: multi-provider hybrid identity, server-directed skins and isolated
+permissions for NeoForge/Forge/Fabric servers.
+'''
+
+[[dependencies.${mod_id}]]
+modId = "forge"
+mandatory = true
+versionRange = "[44,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.19.3,1.20)"
+ordering = "NONE"
+side = "BOTH"

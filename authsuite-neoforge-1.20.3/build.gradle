@@ -1,0 +1,52 @@
+plugins {
+    id("java-library")
+    id("net.neoforged.gradle.userdev") version "7.1.38"
+}
+
+base {
+    archivesName = "authsuite-neoforge"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(project(":authsuite-common"))
+    implementation("net.neoforged:neoforge:${neo_version_1_20_3}")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.yaml:snakeyaml:2.2")
+    annotationProcessor("org.spongepowered:mixin:0.8.5:processor")
+    implementation("org.spongepowered:mixin:0.8.5")
+}
+
+minecraft {
+    accessTransformers {
+        file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
+}
+
+tasks.named("processResources") {
+    inputs.property("version", project.version)
+    inputs.property("mod_id", project.property("mod_id"))
+    filesMatching("META-INF/mods.toml") {
+        expand(
+                "version": project.version,
+                "mod_id": project.property("mod_id"),
+                "minecraft_version": project.property("minecraft_version_1_20_3")
+        )
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+repositories {
+    maven {
+        name = "SpongePowered"
+        url = "https://repo.spongepowered.org/repository/maven-public/"
+    }
+}

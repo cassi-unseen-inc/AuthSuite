@@ -1,0 +1,18 @@
+modLoader = "javafml"
+loaderVersion = "[3,)"
+license = "MIT"
+issueTrackerUrl = "https://github.com/mods/authsuite/issues"
+
+[[mods]]
+modId = "authsuite"
+version = "${version}"
+displayName = "AuthSuite"
+authors = "AuthSuite Contributors"
+credits = "AuthSuite Contributors"
+description = '''
+AuthSuite: multi-provider hybrid identity, server-directed skins and isolated
+permissions for NeoForge/Forge/Fabric servers.
+'''
+
+[[mixins]]
+config = "authsuite.mixins.json"

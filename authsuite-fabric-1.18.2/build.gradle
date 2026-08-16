@@ -1,0 +1,40 @@
+plugins {
+    id("java-library")
+    id("fabric-loom") version "1.9.2"
+}
+
+base {
+    archivesName = "authsuite-fabric"
+}
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(17)
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(project(":authsuite-common"))
+
+    minecraft("com.mojang:minecraft:${minecraft_version_1_18_2}")
+    mappings(loom.officialMojangMappings())
+    modImplementation("net.fabricmc:fabric-loader:${fabric_loader_version_1_18_2}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version_1_18_2}")
+
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.yaml:snakeyaml:2.2")
+}
+
+processResources {
+    inputs.property("version", project.version)
+    filesMatching("fabric.mod.json") {
+        expand("version": project.version)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release = 17
+}

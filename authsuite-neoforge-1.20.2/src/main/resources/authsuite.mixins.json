@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.authsuite.neoforge.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ChatSignatureMixin",
+    "CommandDispatcherMixin",
+    "PlayerListMixin",
+    "ServerPlayerMixin",
+    "PlayerInfoMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 0
+  }
+}
