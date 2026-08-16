@@ -112,10 +112,20 @@ public final class LoginProfileBuilder {
     }
 
     private Map<String, String> skinMetadata(AuthenticatedProfile profile) {
-        return Map.of(
-                "skin", skinUrl(profile),
-                "cape", capeUrl(profile),
-                "model", modelType(profile));
+        Map<String, String> metadata = new java.util.HashMap<>();
+        String skin = skinUrl(profile);
+        String cape = capeUrl(profile);
+        String model = modelType(profile);
+        if (skin != null) {
+            metadata.put("skin", skin);
+        }
+        if (cape != null) {
+            metadata.put("cape", cape);
+        }
+        if (model != null) {
+            metadata.put("model", model);
+        }
+        return metadata;
     }
 
     private SkinResource skinResource(AuthenticatedProfile profile, String key) {
