@@ -53,7 +53,7 @@ repositories {
 
 def bundledLibs = provider {
     configurations.runtimeClasspath.filter {
-        it.name.startsWith("gson-") || it.name.startsWith("snakeyaml-")
+        it.name.startsWith("snakeyaml-")
     }.collect { zipTree(it) }
 }
 
