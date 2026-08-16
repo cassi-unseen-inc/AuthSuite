@@ -38,3 +38,7 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
     options.release = 8
 }
+
+jar {
+    from(project(":authsuite-common-legacy").sourceSets.main.output)
+}

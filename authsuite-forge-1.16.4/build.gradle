@@ -73,4 +73,5 @@ jar {
     manifest {
         attributes["MixinConfigs"] = "authsuite.mixins.json"
     }
+    from(project(":authsuite-common-legacy").sourceSets.main.output)
 }

@@ -44,6 +44,10 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
 }
 
+jar {
+    from(project(":authsuite-common").sourceSets.main.output)
+}
+
 repositories {
     maven {
         name = "SpongePowered"
