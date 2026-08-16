@@ -5,6 +5,7 @@ import net.authsuite.common.log.AuthSuiteLogger;
 import net.authsuite.forge.network.ForgeNetwork;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 /**
  * Forge entrypoint for the AuthSuite mod.
@@ -15,10 +16,11 @@ import net.minecraftforge.fml.common.Mod;
 @Mod(AuthSuiteConstants.MOD_ID)
 public final class AuthSuiteForge {
 
-    public AuthSuiteForge(IEventBus modEventBus, net.minecraftforge.fml.ModContainer modContainer) {
+    public AuthSuiteForge() {
         AuthSuiteLogger log = AuthSuiteLoggerFactory.get();
         log.info("AuthSuite loading (Forge)");
 
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
         ForgeServer.init(modEventBus, log);
         ForgeNetwork.init();
     }
