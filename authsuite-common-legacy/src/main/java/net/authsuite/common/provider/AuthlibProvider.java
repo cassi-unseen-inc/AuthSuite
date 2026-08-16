@@ -77,7 +77,7 @@ public final class AuthlibProvider implements AuthProvider {
         Map<String, String> params = new HashMap<>();
         params.put("username", attempt.username());
         params.put("serverId", attempt.serverId());
-        if (attempt.clientAddress() != null) {
+        if (config.sendIp() && attempt.clientAddress() != null) {
             params.put("ip", attempt.clientAddress().getHostAddress());
         }
         URI url = ProviderHttpClient.joinQuery(URI.create(config.checkUrl()), params);

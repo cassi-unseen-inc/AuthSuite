@@ -132,6 +132,10 @@ public final class ConfigLoader {
         if (priority instanceof Number) {
             p.setPriority(((Number) priority).intValue());
         }
+        Object sendIp = fields.get("send_ip");
+        if (sendIp instanceof Boolean) {
+            p.setSendIp((Boolean) sendIp);
+        }
         return p;
     }
 
@@ -194,6 +198,7 @@ public final class ConfigLoader {
         p.put("domain", domain);
         p.put("enabled", true);
         p.put("priority", 50);
+        p.put("send_ip", false);
         p.put("check_url", checkUrl);
         p.put("profiles_url", profilesUrl);
         p.put("property_url", propertyUrl);

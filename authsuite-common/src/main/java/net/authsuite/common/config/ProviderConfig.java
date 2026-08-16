@@ -21,6 +21,7 @@ public final class ProviderConfig {
     private String propertyUrl;
     private boolean enabled = true;
     private int priority = 50;
+    private boolean sendIp = false;
 
     public String id() {
         return id;
@@ -54,6 +55,10 @@ public final class ProviderConfig {
         return priority;
     }
 
+    public boolean sendIp() {
+        return sendIp;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -84,6 +89,10 @@ public final class ProviderConfig {
 
     public void setPriority(int priority) {
         this.priority = priority;
+    }
+
+    public void setSendIp(boolean sendIp) {
+        this.sendIp = sendIp;
     }
 
     public void validate() {
