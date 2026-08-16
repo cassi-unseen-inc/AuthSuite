@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[52,)"
+loaderVersion = "[37,)"
 license = "MIT"
 issueTrackerUrl = "https://github.com/mods/authsuite/issues"
 
@@ -17,13 +17,13 @@ permissions for NeoForge/Forge/Fabric servers.
 [[dependencies.${mod_id}]]
 modId = "forge"
 mandatory = true
-versionRange = "[52,)"
+versionRange = "[37,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.21.1,1.22)"
+versionRange = "[1.17.1,1.18)"
 ordering = "NONE"
 side = "BOTH"
