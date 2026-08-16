@@ -81,9 +81,13 @@ public final class AuthlibProvider implements AuthProvider {
             params.put("ip", attempt.clientAddress().getHostAddress());
         }
         URI url = ProviderHttpClient.joinQuery(URI.create(config.checkUrl()), params);
-        log.debug("auth {} querying provider {}", attempt.username(), providerId.shortcode());
+        log.info("auth {} provider {} hasJoined GET {}", attempt.username(), providerId.shortcode(), url);
         return http.get(url, 10_000, 1_048_576)
-                .thenApply(body -> parseResponse(attempt, body))
+                .thenApply(body -> {
+                    log.info("auth {} provider {} hasJoined response ({} bytes): {}", attempt.username(),
+                            providerId.shortcode(), body == null ? 0 : body.length(), truncate(body));
+                    return parseResponse(attempt, body);
+                })
                 .exceptionally(ex -> unwrap(ex, attempt));
     }
 
@@ -240,5 +244,12 @@ public final class AuthlibProvider implements AuthProvider {
         CompletableFuture<T> future = new CompletableFuture<>();
         future.completeExceptionally(ex);
         return future;
+    }
+
+    private static String truncate(String s) {
+        if (s == null) {
+            return "null";
+        }
+        return s.length() <= 512 ? s : s.substring(0, 512) + "...";
     }
 }
