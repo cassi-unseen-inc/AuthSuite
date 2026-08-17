@@ -181,7 +181,7 @@ public final class ConfigLoader {
                 "https://littleskin.cn/api/yggdrasil/textures/{0}"));
         providers.put(AuthSuiteConstants.PROVIDER_ELYBY, providerDefaults("EB",
                 "ely.by",
-                "https://authserver.ely.by/api/hasJoined",
+                "https://authserver.ely.by/session/hasJoined",
                 "https://authserver.ely.by/api/profiles/minecraft",
                 "https://authserver.ely.by/api/textures/{0}"));
         root.put("providers", providers);

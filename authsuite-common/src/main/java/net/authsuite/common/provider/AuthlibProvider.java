@@ -146,7 +146,8 @@ public final class AuthlibProvider implements AuthProvider {
             if (httpEx.statusCode() >= 500) {
                 throw new ProviderFailureException(ProviderFailure.unavailable(providerId, "provider error"));
             }
-            throw new ProviderFailureException(ProviderFailure.authFailed(providerId, "http " + httpEx.statusCode()));
+            throw new ProviderFailureException(
+                    ProviderFailure.accountNotFound(providerId, "http " + httpEx.statusCode()));
         }
         log.warn("auth {} provider {} unexpected: {}", attempt.username(), providerId.shortcode(),
                 LogSanitizer.sanitizeMessage(cause));
