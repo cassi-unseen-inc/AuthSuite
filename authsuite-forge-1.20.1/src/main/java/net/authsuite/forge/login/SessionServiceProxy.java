@@ -52,6 +52,11 @@ public final class SessionServiceProxy implements InvocationHandler {
         return server != null ? server.pendingPreference(username) : null;
     }
 
+    private AuthResolver.PreferenceHint pendingPreferenceByAddress(InetAddress address) {
+        ForgeServer server = ForgeServer.get();
+        return server != null ? server.pendingPreferenceByAddress(address) : null;
+    }
+
     public MinecraftSessionService wrap(MinecraftSessionService original) {
         if (original == null || Proxy.isProxyClass(original.getClass())) {
             return original;
@@ -115,8 +120,12 @@ public final class SessionServiceProxy implements InvocationHandler {
         log.debug("hasJoined intercepted for '{}'", username);
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
+        AuthResolver.PreferenceHint preference = pendingPreferenceByAddress(address);
+        if (preference == null) {
+            preference = pendingPreference(username);
+        }
         AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
-                pendingPreference(username));
+                preference);
         if (resolution == null || resolution.profile() == null) {
             log.info("Login rejected for '{}': no provider validated the session", username);
             return null;

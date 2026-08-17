@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.RecordComponent;
+import java.net.InetAddress;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -67,6 +68,7 @@ public final class ForgeServer {
     private final ProviderHttpClient httpClient;
     private final AuthSuiteConfig config;
     private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferences = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferencesByAddress = new ConcurrentHashMap<>();
 
     private ForgeAuthSuiteAPI api;
     private OpsRouter opsRouter;
@@ -334,5 +336,28 @@ public final class ForgeServer {
 
     public Map<String, AuthResolver.PreferenceHint> pendingPreferences() {
         return pendingPreferences;
+    }
+
+    /**
+     * Records a login-phase provider preference keyed by the connecting remote
+     * address (before the username is known). Consumed by
+     * {@code SessionServiceProxy#handleHasJoinedServer} via the {@code InetAddress}
+     * argument so the very first join uses the client's provider without any
+     * pointless upstream polls.
+     */
+    public void recordPreferenceByAddress(InetAddress address, AuthResolver.PreferenceHint preference) {
+        String key = address.getHostAddress();
+        if (preference == null) {
+            pendingPreferencesByAddress.remove(key);
+        } else {
+            pendingPreferencesByAddress.put(key, preference);
+        }
+    }
+
+    public AuthResolver.PreferenceHint pendingPreferenceByAddress(InetAddress address) {
+        if (address == null) {
+            return null;
+        }
+        return pendingPreferencesByAddress.get(address.getHostAddress());
     }
 }
