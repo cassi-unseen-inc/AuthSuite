@@ -32,7 +32,7 @@ public final class FabricNetwork {
                     if (preference.isEmpty()) {
                         return;
                     }
-                    String key = player.getUUID().toString();
+                    String key = player.getGameProfile().getName();
                     FabricServer fabricServer = FabricServer.get();
                     if (fabricServer != null) {
                         fabricServer.recordPreference(key,

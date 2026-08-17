@@ -206,6 +206,10 @@ public final class AuthResolver {
         if (byId.isPresent()) {
             return byId.get().shortcode();
         }
+        Optional<AuthProvider> byHost = manager.byHost(value);
+        if (byHost.isPresent()) {
+            return byHost.get().shortcode();
+        }
         return value.toUpperCase();
     }
 
@@ -222,6 +226,10 @@ public final class AuthResolver {
             Optional<AuthProvider> byId = manager.byId(value);
             if (byId.isPresent()) {
                 return byId.get();
+            }
+            Optional<AuthProvider> byHost = manager.byHost(value);
+            if (byHost.isPresent()) {
+                return byHost.get();
             }
         }
         return chain.isEmpty() ? null : chain.get(0);

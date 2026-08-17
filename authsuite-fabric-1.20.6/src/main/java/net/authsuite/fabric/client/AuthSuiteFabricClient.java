@@ -1,5 +1,6 @@
 package net.authsuite.fabric.client;
 
+import net.authsuite.common.client.ClientPreference;
 import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.skin.SkinDirective;
 import net.authsuite.fabric.network.FabricNetwork;
@@ -29,7 +30,7 @@ public final class AuthSuiteFabricClient implements ClientModInitializer {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (!preferenceSent && client.getConnection() != null) {
                 preferenceSent = true;
-                String preferred = System.getProperty("authsuite.preferredProvider", "");
+                String preferred = ClientPreference.detect();
                 FabricNetwork.sendPreference(preferred, "");
                 skinApplier.reset();
             }

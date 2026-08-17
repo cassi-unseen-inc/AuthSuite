@@ -53,7 +53,7 @@ public final class NeoForgeNetwork {
         }
         ServerPlayer player = context.getSender();
         String key = player != null
-                ? player.getUUID().toString()
+                ? player.getGameProfile().getName()
                 : context.getNetworkManager().getRemoteAddress() != null
                         ? context.getNetworkManager().getRemoteAddress().toString()
                         : "anon";

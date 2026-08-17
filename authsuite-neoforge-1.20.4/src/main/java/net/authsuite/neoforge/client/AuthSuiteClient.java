@@ -1,6 +1,7 @@
 package net.authsuite.neoforge.client;
 
 import net.authsuite.common.AuthSuiteConstants;
+import net.authsuite.common.client.ClientPreference;
 import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.skin.SkinDirective;
 import net.authsuite.neoforge.network.AuthProviderPreferencePayload;
@@ -42,7 +43,7 @@ public final class AuthSuiteClient {
     private void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
         // Provider preference is advisory and arrives after the first login on 1.21.x;
         // it is bound for reconnects and identity resolution (never proof of identity).
-        String preferred = System.getProperty("authsuite.preferredProvider", "");
+        String preferred = ClientPreference.detect();
         PacketCodec.PreferencePayload preference = new PacketCodec.PreferencePayload(preferred, "");
         PacketDistributor.SERVER.noArg().send(new AuthProviderPreferencePayload(
                 PacketCodec.encodePreference(preference.preferredProviderId(), preference.sessionHint())));

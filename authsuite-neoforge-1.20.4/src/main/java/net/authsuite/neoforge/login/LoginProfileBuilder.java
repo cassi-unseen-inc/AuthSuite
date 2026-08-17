@@ -56,10 +56,11 @@ public final class LoginProfileBuilder {
     }
 
     /** Blocking resolve used by the login handler (never on the server main thread). */
-    public AuthResolver.Resolution resolveBlocking(String username, String serverId, InetAddress address, long timeout) {
+    public AuthResolver.Resolution resolveBlocking(String username, String serverId, InetAddress address, long timeout,
+                                          AuthResolver.PreferenceHint preference) {
         AuthAttempt attempt = new AuthAttempt(username, serverId, address, false);
         try {
-            return resolver.resolve(attempt, null, null).get(timeout, TimeUnit.MILLISECONDS);
+            return resolver.resolve(attempt, null, preference).get(timeout, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             log.warn("Login resolution interrupted for '{}'", username);

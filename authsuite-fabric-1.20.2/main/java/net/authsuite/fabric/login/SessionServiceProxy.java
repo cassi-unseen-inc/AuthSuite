@@ -6,6 +6,7 @@ import net.authsuite.common.identity.IdentityRegistry;
 import net.authsuite.common.log.AuthSuiteLogger;
 import net.authsuite.common.provider.AuthResolver;
 import net.authsuite.common.provider.ProviderManager;
+import net.authsuite.fabric.server.FabricServer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -42,6 +43,11 @@ public final class SessionServiceProxy implements InvocationHandler {
         this.providerManager = providerManager;
         this.log = log;
         this.profileBuilder = new LoginProfileBuilder(identityRegistry, providerManager, resolver, log);
+    }
+
+    private AuthResolver.PreferenceHint pendingPreference(String username) {
+        FabricServer server = FabricServer.get();
+        return server != null ? server.pendingPreference(username) : null;
     }
 
     public MinecraftSessionService wrap(MinecraftSessionService original) {
@@ -101,7 +107,8 @@ public final class SessionServiceProxy implements InvocationHandler {
         log.debug("hasJoined intercepted for '{}'", username);
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
-        AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout);
+        AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
+                pendingPreference(username));
         if (resolution == null || resolution.profile() == null) {
             log.info("Login rejected for '{}': no provider validated the session", username);
             return null;

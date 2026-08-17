@@ -44,6 +44,20 @@ public final class ProviderManager {
         return Optional.ofNullable(byShortcode.get(normalize(shortcode)));
     }
 
+    /** Matches a provider by host, using its configured domain or check_url host. */
+    public Optional<AuthProvider> byHost(String host) {
+        if (host == null || host.isBlank()) {
+            return Optional.empty();
+        }
+        String wanted = normalizeHost(host);
+        for (AuthProvider p : byId.values()) {
+            if (matchesHost(p, wanted)) {
+                return Optional.of(p);
+            }
+        }
+        return Optional.empty();
+    }
+
     /** Ordered list of currently enabled providers. */
     public List<AuthProvider> enabled() {
         List<AuthProvider> out = new ArrayList<>();
@@ -85,5 +99,20 @@ public final class ProviderManager {
 
     private String normalize(String shortcode) {
         return shortcode.trim().toUpperCase();
+    }
+
+    private static String normalizeHost(String host) {
+        return host.trim().toLowerCase().replaceAll("^https?://", "").replaceAll("/.*$", "");
+    }
+
+    private static boolean matchesHost(AuthProvider p, String wanted) {
+        if (p.domain() != null && normalizeHost(p.domain()).equals(wanted)) {
+            return true;
+        }
+        if (p instanceof AuthlibProvider ap && ap.config() != null && ap.config().checkUrl() != null
+                && !ap.config().checkUrl().isBlank() && normalizeHost(ap.config().checkUrl()).equals(wanted)) {
+            return true;
+        }
+        return false;
     }
 }

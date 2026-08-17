@@ -35,7 +35,7 @@ public final class FabricNetwork {
                     if (preference.isEmpty()) {
                         return;
                     }
-                    String key = context.player().getUUID().toString();
+                    String key = context.player().getGameProfile().getName();
                     net.authsuite.fabric.server.FabricServer server = net.authsuite.fabric.server.FabricServer.get();
                     if (server != null) {
                         server.recordPreference(key,

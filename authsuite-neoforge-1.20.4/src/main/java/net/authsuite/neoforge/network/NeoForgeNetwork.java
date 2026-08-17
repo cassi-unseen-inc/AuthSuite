@@ -55,7 +55,7 @@ public final class NeoForgeNetwork {
             return;
         }
         String key = player != null
-                ? player.getUUID().toString()
+                ? player.getGameProfile().getName()
                 : "anon";
         net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
         if (server != null) {

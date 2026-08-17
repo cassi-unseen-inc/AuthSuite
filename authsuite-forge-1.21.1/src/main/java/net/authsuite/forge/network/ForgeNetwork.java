@@ -58,7 +58,7 @@ public final class ForgeNetwork {
         }
         ServerPlayer player = context.getSender();
         String key = player != null
-                ? player.getUUID().toString()
+                ? player.getGameProfile().getName()
                 : context.getConnection().getRemoteAddress() != null
                         ? context.getConnection().getRemoteAddress().toString()
                         : "anon";
