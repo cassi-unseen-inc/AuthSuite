@@ -120,9 +120,9 @@ public final class SessionServiceProxy implements InvocationHandler {
         log.debug("hasJoined intercepted for '{}'", username);
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
-        AuthResolver.PreferenceHint preference = pendingPreferenceByAddress(address);
+        AuthResolver.PreferenceHint preference = pendingPreference(username);
         if (preference == null) {
-            preference = pendingPreference(username);
+            preference = pendingPreferenceByAddress(address);
         }
         log.info("hasJoinedServer for '{}' address={} preference={}",
                 username, address == null ? "null" : address.getHostAddress(),

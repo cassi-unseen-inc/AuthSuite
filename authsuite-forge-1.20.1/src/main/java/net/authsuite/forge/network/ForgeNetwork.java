@@ -8,9 +8,11 @@ import net.authsuite.forge.ForgeServer;
 import net.authsuite.forge.client.AuthSuiteClient;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.PacketListener;
 import net.minecraft.network.protocol.login.ServerboundCustomQueryPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerLoginPacketListenerImpl;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.NetworkDirection;
@@ -19,6 +21,7 @@ import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
+import java.lang.reflect.Field;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -106,19 +109,55 @@ public final class ForgeNetwork {
         NetworkEvent.Context context = ctx.get();
         PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
         if (!preference.isEmpty()) {
-            InetAddress address = remoteAddress(context.getNetworkManager());
-            if (address != null) {
-                ForgeServer server = ForgeServer.get();
-                if (server != null) {
-                    server.recordPreferenceByAddress(address,
-                            new AuthResolver.PreferenceHint(
-                                    preference.preferredProviderId(), preference.sessionHint()));
+            ForgeServer server = ForgeServer.get();
+            if (server != null) {
+                AuthResolver.PreferenceHint hint = new AuthResolver.PreferenceHint(
+                        preference.preferredProviderId(), preference.sessionHint());
+                String username = loginUsername(context.getNetworkManager());
+                if (username != null) {
+                    server.recordPreference(username, hint);
+                    server.log().info("Recorded login-phase provider preference for user '{}' = '{}'",
+                            username, preference.preferredProviderId());
+                }
+                InetAddress address = remoteAddress(context.getNetworkManager());
+                if (address != null) {
+                    server.recordPreferenceByAddress(address, hint);
                     server.log().info("Recorded login-phase provider preference for {} = '{}'",
                             address.getHostAddress(), preference.preferredProviderId());
                 }
             }
         }
         context.setPacketHandled(true);
+    }
+
+    /**
+     * Extracts the connecting player's username from the login-phase listener. The
+     * server's {@code ServerLoginPacketListenerImpl} already holds the
+     * {@code GameProfile} from the earlier hello packet; reading it here lets us key
+     * the herald by username so {@code hasJoinedServer} can find it regardless of
+     * whether the server passes the remote address (which is {@code null} unless
+     * {@code prevent-proxy-connections} is enabled). Field is {@code gameProfile} in
+     * dev (mojmap) and {@code f_10021_} in the reobfuscated production jar.
+     */
+    private static String loginUsername(Connection connection) {
+        try {
+            PacketListener listener = connection.getPacketListener();
+            if (listener instanceof ServerLoginPacketListenerImpl login) {
+                for (String fieldName : new String[]{"f_10021_", "gameProfile"}) {
+                    try {
+                        Field field = ServerLoginPacketListenerImpl.class.getDeclaredField(fieldName);
+                        field.setAccessible(true);
+                        Object value = field.get(login);
+                        if (value instanceof com.mojang.authlib.GameProfile profile) {
+                            return profile.getName();
+                        }
+                    } catch (NoSuchFieldException ignored) {
+                    }
+                }
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
     }
 
     private static InetAddress remoteAddress(Connection connection) {
