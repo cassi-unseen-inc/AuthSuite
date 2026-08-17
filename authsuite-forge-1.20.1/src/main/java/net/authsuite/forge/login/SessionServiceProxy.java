@@ -124,6 +124,9 @@ public final class SessionServiceProxy implements InvocationHandler {
         if (preference == null) {
             preference = pendingPreference(username);
         }
+        log.info("hasJoinedServer for '{}' address={} preference={}",
+                username, address == null ? "null" : address.getHostAddress(),
+                preference == null ? "null" : preference.providerIdOrShortcode());
         AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
                 preference);
         if (resolution == null || resolution.profile() == null) {

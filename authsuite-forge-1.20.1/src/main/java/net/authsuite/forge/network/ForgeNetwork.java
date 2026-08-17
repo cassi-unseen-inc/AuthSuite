@@ -113,7 +113,8 @@ public final class ForgeNetwork {
                     server.recordPreferenceByAddress(address,
                             new AuthResolver.PreferenceHint(
                                     preference.preferredProviderId(), preference.sessionHint()));
-                    server.log().debug("Recorded login-phase provider preference for {}", address.getHostAddress());
+                    server.log().info("Recorded login-phase provider preference for {} = '{}'",
+                            address.getHostAddress(), preference.preferredProviderId());
                 }
             }
         }
@@ -156,6 +157,8 @@ public final class ForgeNetwork {
         wrapped.writeVarInt(data.readableBytes());
         wrapped.writeBytes(data);
         connection.send(new ServerboundCustomQueryPacket(0, wrapped));
+        net.authsuite.forge.AuthSuiteLoggerFactory.get().info(
+                "Sending login-phase provider preference for '{}'", preferred);
     }
 
     /** Client -> server preference send. */
