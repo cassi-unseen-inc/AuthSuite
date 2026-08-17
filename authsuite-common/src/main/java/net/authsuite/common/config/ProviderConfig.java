@@ -22,6 +22,7 @@ public final class ProviderConfig {
     private boolean enabled = true;
     private int priority = 50;
     private boolean sendIp = false;
+    private boolean verboseLogging = true;
 
     public String id() {
         return id;
@@ -59,6 +60,10 @@ public final class ProviderConfig {
         return sendIp;
     }
 
+    public boolean verboseLogging() {
+        return verboseLogging;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -93,6 +98,10 @@ public final class ProviderConfig {
 
     public void setSendIp(boolean sendIp) {
         this.sendIp = sendIp;
+    }
+
+    public void setVerboseLogging(boolean verboseLogging) {
+        this.verboseLogging = verboseLogging;
     }
 
     public void validate() {

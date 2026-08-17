@@ -136,6 +136,10 @@ public final class ConfigLoader {
         if (sendIp instanceof Boolean) {
             p.setSendIp((Boolean) sendIp);
         }
+        Object verbose = fields.get("verbose");
+        if (verbose instanceof Boolean) {
+            p.setVerboseLogging((Boolean) verbose);
+        }
         return p;
     }
 
@@ -196,9 +200,10 @@ public final class ConfigLoader {
         Map<String, Object> p = new LinkedHashMap<>();
         p.put("shortcode", shortcode);
         p.put("domain", domain);
-        p.put("enabled", true);
+        p.put("enabled", false);
         p.put("priority", 50);
         p.put("send_ip", false);
+        p.put("verbose", true);
         p.put("check_url", checkUrl);
         p.put("profiles_url", profilesUrl);
         p.put("property_url", propertyUrl);

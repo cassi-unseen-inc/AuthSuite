@@ -80,11 +80,20 @@ public final class AuthlibProvider implements AuthProvider {
             params.put("ip", attempt.clientAddress().getHostAddress());
         }
         URI url = ProviderHttpClient.joinQuery(URI.create(config.checkUrl()), params);
-        log.info("auth {} provider {} hasJoined GET {}", attempt.username(), providerId.shortcode(), url);
+        if (config.verboseLogging()) {
+            log.info("auth {} provider {} hasJoined GET {}", attempt.username(), providerId.shortcode(), url);
+        } else {
+            log.debug("auth {} provider {} hasJoined GET {}", attempt.username(), providerId.shortcode(), url);
+        }
         return http.get(url, 10_000, 1_048_576)
                 .thenApply(body -> {
-                    log.info("auth {} provider {} hasJoined response ({} bytes): {}", attempt.username(),
-                            providerId.shortcode(), body == null ? 0 : body.length(), truncate(body));
+                    if (config.verboseLogging()) {
+                        log.info("auth {} provider {} hasJoined response ({} bytes): {}", attempt.username(),
+                                providerId.shortcode(), body == null ? 0 : body.length(), truncate(body));
+                    } else {
+                        log.debug("auth {} provider {} hasJoined response ({} bytes): {}", attempt.username(),
+                                providerId.shortcode(), body == null ? 0 : body.length(), truncate(body));
+                    }
                     return parseResponse(attempt, body);
                 })
                 .exceptionally(ex -> unwrap(ex, attempt));
