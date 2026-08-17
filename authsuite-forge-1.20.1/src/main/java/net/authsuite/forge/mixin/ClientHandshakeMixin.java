@@ -22,10 +22,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ClientHandshakeMixin {
 
     @Shadow(remap = false)
-    private Connection connection;
+    private Connection f_104522_;
 
-    @Inject(method = "handleHello", at = @At("HEAD"), remap = false)
+    @Inject(method = "m_7318_", at = @At("HEAD"), remap = false)
     private void authsuite_sendLoginPreference(ClientboundHelloPacket packet, CallbackInfo ci) {
-        ForgeNetwork.sendLoginPreference(this.connection);
+        ForgeNetwork.sendLoginPreference(this.f_104522_);
     }
 }
