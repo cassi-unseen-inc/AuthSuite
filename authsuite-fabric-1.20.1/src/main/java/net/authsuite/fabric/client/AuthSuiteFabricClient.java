@@ -1,7 +1,5 @@
 package net.authsuite.fabric.client;
 
-import net.authsuite.common.client.ClientPreference;
-import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.skin.SkinDirective;
 import net.authsuite.fabric.network.FabricNetwork;
 import net.fabricmc.api.ClientModInitializer;
@@ -28,10 +26,12 @@ public final class AuthSuiteFabricClient implements ClientModInitializer {
         instance = this;
         FabricNetwork.initClient();
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            // The provider preference is heralded during the LOGIN handshake
+            // (FabricNetwork buildLoginResponse) and bound to that connection's
+            // LoginAttempt. The play-phase preference send is intentionally gone:
+            // username-keyed preference state is forbidden (post-audit §5).
             if (!preferenceSent && client.getConnection() != null) {
                 preferenceSent = true;
-                String preferred = ClientPreference.detect();
-                FabricNetwork.sendPreference(preferred, "");
                 skinApplier.reset();
             }
         });

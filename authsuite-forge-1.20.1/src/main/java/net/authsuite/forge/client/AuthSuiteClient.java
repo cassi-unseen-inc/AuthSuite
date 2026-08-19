@@ -2,10 +2,7 @@ package net.authsuite.forge.client;
 
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 import net.authsuite.common.AuthSuiteConstants;
-import net.authsuite.common.client.ClientPreference;
-import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.skin.SkinDirective;
-import net.authsuite.forge.network.AuthProviderPreferencePayload;
 import net.authsuite.forge.network.ForgeNetwork;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -46,12 +43,10 @@ public final class AuthSuiteClient {
     }
 
     private void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
-        // Provider preference is advisory and arrives after the first login on 1.21.x;
-        // it is bound for reconnects and identity resolution (never proof of identity).
-        String preferred = ClientPreference.detect();
-        PacketCodec.PreferencePayload preference = new PacketCodec.PreferencePayload(preferred, "");
-        ForgeNetwork.sendToServer(new AuthProviderPreferencePayload(
-                PacketCodec.encodePreference(preference.preferredProviderId(), preference.sessionHint())));
+        // The provider preference is heralded during the LOGIN handshake
+        // (ForgeNetwork.sendLoginPreference) and bound to that connection's
+        // LoginAttempt. The play-phase preference send is intentionally gone:
+        // username-keyed preference state is forbidden (post-audit §5).
         skinApplier.reset();
         textureLocations.clear();
     }

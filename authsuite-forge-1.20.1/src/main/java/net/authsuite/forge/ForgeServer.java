@@ -8,6 +8,7 @@ import net.authsuite.common.config.ConfigLoader;
 import net.authsuite.common.config.ProviderConfig;
 import net.authsuite.common.config.ShortcodeRegistry;
 import net.authsuite.common.identity.IdentityRegistry;
+import net.authsuite.common.identity.IdentityResolver;
 import net.authsuite.common.log.AuthSuiteLogger;
 import net.authsuite.common.provider.AuthlibProvider;
 import net.authsuite.common.provider.AuthResolver;
@@ -39,10 +40,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.RecordComponent;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Forge platform bootstrap.
@@ -67,7 +65,7 @@ public final class ForgeServer {
     private final AuthResolver resolver;
     private final ProviderHttpClient httpClient;
     private final AuthSuiteConfig config;
-    private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferences = new ConcurrentHashMap<>();
+    private final IdentityResolver identityResolver;
 
     private ForgeAuthSuiteAPI api;
     private OpsRouter opsRouter;
@@ -94,6 +92,7 @@ public final class ForgeServer {
         this.providerManager = new ProviderManager(shortcodes, log);
         wireProviders();
         this.resolver = new AuthResolver(providerManager, config, log);
+        this.identityResolver = new IdentityResolver(identityRegistry, providerManager, log);
         this.permissionService = new ForgePermissionService(identityRegistry, providerManager, config, log);
     }
 
@@ -321,31 +320,8 @@ public final class ForgeServer {
         return server;
     }
 
-    public void recordPreference(String key, AuthResolver.PreferenceHint preference) {
-        if (preference == null) {
-            pendingPreferences.remove(key);
-        } else {
-            pendingPreferences.put(key, preference);
-        }
-    }
-
-    public AuthResolver.PreferenceHint pendingPreference(String key) {
-        return pendingPreferences.get(key);
-    }
-
-    public Map<String, AuthResolver.PreferenceHint> pendingPreferences() {
-        return pendingPreferences;
-    }
-
-    /**
-     * Removes a login-phase provider preference once it has been consumed (login
-     * succeeded or failed) or its connection died mid-login. The client heralds the
-     * preference on every join, so a persistent entry serves no purpose.
-     */
-    public void clearPreference(String username) {
-        if (username != null && pendingPreferences.remove(username) != null) {
-            log.info("Cleared login-phase provider preference for user '{}'", username);
-        }
+    public IdentityResolver identityResolver() {
+        return identityResolver;
     }
 
     /**
@@ -368,6 +344,5 @@ public final class ForgeServer {
             server.identityRegistry().release(uuid);
             server.log().info("Released login-phase session for canonical identity {}", uuid);
         }
-        server.clearPreference(profile.getName());
     }
 }

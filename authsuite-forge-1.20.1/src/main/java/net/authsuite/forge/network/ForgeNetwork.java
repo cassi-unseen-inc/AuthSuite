@@ -2,6 +2,8 @@ package net.authsuite.forge.network;
 
 import io.netty.buffer.Unpooled;
 import net.authsuite.common.client.ClientPreference;
+import net.authsuite.common.login.LoginAttempt;
+import net.authsuite.common.login.LoginAttemptStore;
 import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.provider.AuthResolver;
 import net.authsuite.forge.ForgeServer;
@@ -66,26 +68,11 @@ public final class ForgeNetwork {
     }
 
     private static void handlePreference(AuthProviderPreferencePayload payload, Supplier<NetworkEvent.Context> ctx) {
-        NetworkEvent.Context context = ctx.get();
-        PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-        if (!preference.isEmpty()) {
-            ServerPlayer player = context.getSender();
-            String key = player != null
-                    ? player.getGameProfile().getName()
-                    : context.getNetworkManager().getRemoteAddress() != null
-                            ? context.getNetworkManager().getRemoteAddress().toString()
-                            : "anon";
-            context.enqueueWork(() -> {
-                ForgeServer server = ForgeServer.get();
-                if (server != null) {
-                    server.recordPreference(key,
-                            new AuthResolver.PreferenceHint(
-                                    preference.preferredProviderId(), preference.sessionHint()));
-                    server.log().debug("Recorded client provider preference for {}", key);
-                }
-            });
-        }
-        context.setPacketHandled(true);
+        // Play-phase provider preference is deprecated: the provider preference is
+        // bound to the login attempt via the login-phase herald (post-audit §5) and
+        // must never be keyed by username. The payload remains registered for
+        // protocol compatibility but carries no state.
+        ctx.get().setPacketHandled(true);
     }
 
     private static void handleSkinDirective(PlayerSkinDirectivePayload payload, Supplier<NetworkEvent.Context> ctx) {
@@ -98,24 +85,30 @@ public final class ForgeNetwork {
     /**
      * Login-phase preference handler. Runs on the netty event-loop thread and MUST
      * record synchronously (no enqueueWork): {@code hasJoinedServer} runs on the
-     * "User Authenticator" thread spawned afterwards, so the {@code ConcurrentHashMap}
-     * write must be visible before that thread reads it (happens-before via the
-     * thread start in {@code ServerLoginPacketListenerImpl#handleKey}).
+     * "User Authenticator" thread spawned afterwards, so the write must be visible
+     * before that thread reads it (happens-before via the thread start in
+     * {@code ServerLoginPacketListenerImpl#handleKey}).
+     * <p>
+     * The preference is bound to THIS connection's {@link LoginAttempt}, never to
+     * a username, so simultaneous same-username logins stay independent.
      */
     private static void handleLoginPreference(AuthLoginPreferencePayload payload, Supplier<NetworkEvent.Context> ctx) {
         NetworkEvent.Context context = ctx.get();
         PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
         if (!preference.isEmpty()) {
-            ForgeServer server = ForgeServer.get();
-            if (server != null) {
-                AuthResolver.PreferenceHint hint = new AuthResolver.PreferenceHint(
-                        preference.preferredProviderId(), preference.sessionHint());
+            PacketListener listener = context.getNetworkManager().getPacketListener();
+            if (listener instanceof ServerLoginPacketListenerImpl login) {
                 String username = loginUsername(context.getNetworkManager());
-                if (username != null) {
-                    server.recordPreference(username, hint);
-                    server.log().info("Recorded login-phase provider preference for user '{}' = '{}'",
-                            username, preference.preferredProviderId());
+                LoginAttempt attempt = LoginAttemptStore.forConnection(login);
+                if (attempt == null) {
+                    attempt = new LoginAttempt(login, username);
+                    LoginAttemptStore.bind(login, attempt);
                 }
+                attempt.setPreference(new AuthResolver.PreferenceHint(
+                        preference.preferredProviderId(), preference.sessionHint()));
+                net.authsuite.forge.AuthSuiteLoggerFactory.get().info(
+                        "Recorded login-phase provider preference for connection of '{}' = '{}'",
+                        username, preference.preferredProviderId());
             }
         }
         context.setPacketHandled(true);

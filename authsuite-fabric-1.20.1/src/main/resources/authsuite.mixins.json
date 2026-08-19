@@ -10,7 +10,8 @@
     "ServerPlayerMixin",
     "PlayerInfoMixin",
     "ServerLoginHandlerAccessor",
-    "ServerLoginHandlerMixin"
+    "ServerLoginHandlerMixin",
+    "ServerLoginAttemptMixin"
   ],
   "injectors": {
     "defaultRequire": 0

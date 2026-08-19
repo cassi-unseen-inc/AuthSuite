@@ -9,7 +9,8 @@
     "PlayerListMixin",
     "ServerPlayerMixin",
     "PlayerInfoMixin",
-    "ServerLoginDisconnectMixin"
+    "ServerLoginDisconnectMixin",
+    "ServerLoginAttemptMixin"
   ],
   "injectors": {
     "defaultRequire": 0

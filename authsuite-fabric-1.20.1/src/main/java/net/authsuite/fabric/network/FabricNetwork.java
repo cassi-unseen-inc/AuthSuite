@@ -42,18 +42,11 @@ public final class FabricNetwork {
         ServerLoginNetworking.registerGlobalReceiver(LOGIN_CHANNEL, FabricNetwork::handleLoginPreference);
         ServerPlayNetworking.registerGlobalReceiver(AuthProviderPreferencePayload.TYPE,
                 (payload, player, sender) -> player.server.execute(() -> {
-                    PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-                    if (preference.isEmpty()) {
-                        return;
-                    }
-                    String key = player.getGameProfile().getName();
-                    FabricServer server = FabricServer.get();
-                    if (server != null) {
-                        server.recordPreference(key,
-                                new net.authsuite.common.provider.AuthResolver.PreferenceHint(
-                                        preference.preferredProviderId(), preference.sessionHint()));
-                        server.log().debug("Recorded client provider preference for {}", key);
-                    }
+                    // Play-phase provider preference is deprecated: the provider
+                    // preference is bound to the login attempt via the login-phase
+                    // herald (post-audit §5) and must never be keyed by username.
+                    // The payload remains registered for protocol compatibility but
+                    // carries no state.
                 }));
     }
 
@@ -72,9 +65,11 @@ public final class FabricNetwork {
     /**
      * Server-side login-phase receiver. Fabric queries the connecting client
      * during the login handshake (see {@code ServerLoginHandlerMixin}); this
-     * records the client's provider preference keyed by username before the
-     * authenticator runs. Clients without AuthSuite respond with an empty buffer
-     * ({@code understood == false}) and are ignored.
+     * binds the client's provider preference to THIS connection's
+     * {@link net.authsuite.common.login.LoginAttempt}, never to a username, so
+     * simultaneous same-username logins stay independent. Clients without
+     * AuthSuite respond with an empty buffer ({@code understood == false}) and
+     * are ignored.
      */
     private static void handleLoginPreference(MinecraftServer server, ServerLoginPacketListenerImpl handler,
                                               boolean understood, FriendlyByteBuf buf,
@@ -94,15 +89,16 @@ public final class FabricNetwork {
         }
         GameProfile profile = ((ServerLoginHandlerAccessor) handler).authsuite$getGameProfile();
         String username = profile != null ? profile.getName() : null;
-        if (username == null) {
-            return;
+        net.authsuite.common.login.LoginAttempt attempt = net.authsuite.common.login.LoginAttemptStore.forConnection(handler);
+        if (attempt == null) {
+            attempt = new net.authsuite.common.login.LoginAttempt(handler, username);
+            net.authsuite.common.login.LoginAttemptStore.bind(handler, attempt);
         }
+        attempt.setPreference(new net.authsuite.common.provider.AuthResolver.PreferenceHint(
+                preference.preferredProviderId(), preference.sessionHint()));
         FabricServer fabricServer = FabricServer.get();
         if (fabricServer != null) {
-            fabricServer.recordPreference(username,
-                    new net.authsuite.common.provider.AuthResolver.PreferenceHint(
-                            preference.preferredProviderId(), preference.sessionHint()));
-            fabricServer.log().info("Recorded login-phase provider preference for user '{}' = '{}'",
+            fabricServer.log().info("Recorded login-phase provider preference for connection of '{}' = '{}'",
                     username, preference.preferredProviderId());
         }
     }

@@ -1,9 +1,12 @@
 package net.authsuite.fabric.mixin;
 
 import io.netty.buffer.Unpooled;
+import net.authsuite.common.login.LoginAttempt;
+import net.authsuite.common.login.LoginAttemptStore;
 import net.authsuite.fabric.network.FabricNetwork;
 import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.login.ClientboundCustomQueryPacket;
 import net.minecraft.network.protocol.login.ServerboundHelloPacket;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
@@ -42,5 +45,13 @@ public abstract class ServerLoginHandlerMixin {
         FriendlyByteBuf data = new FriendlyByteBuf(Unpooled.buffer());
         this.connection.send(new ClientboundCustomQueryPacket(
                 FabricNetwork.LOGIN_QUERY_ID, FabricNetwork.LOGIN_CHANNEL, data));
+    }
+
+    @Inject(method = "disconnect", at = @At("HEAD"), require = 1)
+    private void authsuite$releaseLoginAttempt(Component reason, CallbackInfo ci) {
+        LoginAttempt attempt = LoginAttemptStore.remove(this);
+        if (attempt != null) {
+            attempt.setState(LoginAttempt.State.DISCONNECTED);
+        }
     }
 }

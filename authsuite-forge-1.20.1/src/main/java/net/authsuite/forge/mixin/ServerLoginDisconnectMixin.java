@@ -1,6 +1,8 @@
 package net.authsuite.forge.mixin;
 
 import com.mojang.authlib.GameProfile;
+import net.authsuite.common.login.LoginAttempt;
+import net.authsuite.common.login.LoginAttemptStore;
 import net.authsuite.forge.ForgeServer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.network.ServerLoginPacketListenerImpl;
@@ -36,10 +38,18 @@ public abstract class ServerLoginDisconnectMixin {
     @Inject(method = "m_7026_", at = @At("HEAD"), remap = false)
     private void authsuite_releaseOnConnectionLost(Component reason, CallbackInfo ci) {
         ForgeServer.releaseLoginSession(this.f_10021_);
+        LoginAttempt attempt = LoginAttemptStore.remove(this);
+        if (attempt != null) {
+            attempt.setState(LoginAttempt.State.DISCONNECTED);
+        }
     }
 
     @Inject(method = "m_10053_", at = @At("HEAD"), remap = false)
     private void authsuite_releaseOnDisconnecting(Component reason, CallbackInfo ci) {
         ForgeServer.releaseLoginSession(this.f_10021_);
+        LoginAttempt attempt = LoginAttemptStore.remove(this);
+        if (attempt != null) {
+            attempt.setState(LoginAttempt.State.DISCONNECTED);
+        }
     }
 }
