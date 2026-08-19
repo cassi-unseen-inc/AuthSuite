@@ -19,6 +19,12 @@ import java.util.Optional;
  * NeoForge 1.20.2/1.20.3 network wiring using the legacy {@link SimpleChannel}
  * API (before the payload registry era). Registers the provider preference
  * (client -> server) and the authoritative skin directive (server -> client).
+ * <p>
+ * The provider preference is intentionally inert here: 1.20.2 NeoForge has no
+ * login-phase channel at all, so a client cannot announce its preference before
+ * identity verification. The {@code AuthProviderPreferencePayload} registration is
+ * retained only for wire compatibility; its handler is a no-op and the connection
+ * preference is never recorded.
  */
 public final class NeoForgeNetwork {
 
@@ -47,25 +53,12 @@ public final class NeoForgeNetwork {
     }
 
     private static void handlePreference(AuthProviderPreferencePayload payload, NetworkEvent.Context context) {
-        PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-        if (preference.isEmpty()) {
-            return;
+        // No-op: 1.20.2 has no login-phase channel, so the preference is never
+        // announced before identity verification and must not be trusted here.
+        net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
+        if (server != null) {
+            server.log().debug("Ignoring client provider preference (no login channel in this version)");
         }
-        ServerPlayer player = context.getSender();
-        String key = player != null
-                ? player.getGameProfile().getName()
-                : context.getNetworkManager().getRemoteAddress() != null
-                        ? context.getNetworkManager().getRemoteAddress().toString()
-                        : "anon";
-        context.enqueueWork(() -> {
-            net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
-            if (server != null) {
-                server.recordPreference(key,
-                        new net.authsuite.common.provider.AuthResolver.PreferenceHint(
-                                preference.preferredProviderId(), preference.sessionHint()));
-                server.log().debug("Recorded client provider preference for {}", key);
-            }
-        });
     }
 
     private static void handleSkinDirective(PlayerSkinDirectivePayload payload, NetworkEvent.Context context) {

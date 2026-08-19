@@ -6,6 +6,7 @@ import net.authsuite.common.config.ConfigLoader;
 import net.authsuite.common.config.ProviderConfig;
 import net.authsuite.common.config.ShortcodeRegistry;
 import net.authsuite.common.identity.IdentityRegistry;
+import net.authsuite.common.identity.IdentityResolver;
 import net.authsuite.common.log.AuthSuiteLogger;
 import net.authsuite.common.provider.AuthlibProvider;
 import net.authsuite.common.provider.AuthResolver;
@@ -14,7 +15,7 @@ import net.authsuite.common.provider.ProviderId;
 import net.authsuite.common.provider.ProviderManager;
 import net.authsuite.fabric.api.FabricAuthSuiteAPI;
 import net.authsuite.fabric.command.AuthSuiteCommands;
-import net.authsuite.fabric.command.OpCommandInterceptor;
+import net.authsuite.fabric.command.OpCommands;
 import net.authsuite.fabric.login.SessionServiceProxy;
 import net.authsuite.fabric.network.FabricNetwork;
 import net.authsuite.fabric.ops.OpsRouter;
@@ -32,10 +33,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Fabric platform bootstrap.
@@ -59,7 +57,7 @@ public final class FabricServer {
     private final AuthResolver resolver;
     private final ProviderHttpClient httpClient;
     private final AuthSuiteConfig config;
-    private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferences = new ConcurrentHashMap<>();
+    private final IdentityResolver identityResolver;
 
     private FabricAuthSuiteAPI api;
     private OpsRouter opsRouter;
@@ -87,6 +85,7 @@ public final class FabricServer {
         wireProviders();
         this.resolver = new AuthResolver(providerManager, config, log);
         this.permissionService = new FabricPermissionService(identityRegistry, providerManager, config, log);
+        this.identityResolver = new IdentityResolver(identityRegistry, providerManager, log);
     }
 
     public static void init(AuthSuiteLogger log) {
@@ -102,7 +101,7 @@ public final class FabricServer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> instance.onPlayerJoin(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> instance.onPlayerLeave(handler.player));
         CommandRegistrationCallback.EVENT.register((dispatcher, dedicated) -> {
-            OpCommandInterceptor.register(dispatcher);
+            OpCommands.register(dispatcher, instance);
             AuthSuiteCommands.register(dispatcher, instance);
         });
         FabricNetwork.init();
@@ -282,19 +281,7 @@ public final class FabricServer {
         return server;
     }
 
-    public void recordPreference(String key, AuthResolver.PreferenceHint preference) {
-        if (preference == null) {
-            pendingPreferences.remove(key);
-        } else {
-            pendingPreferences.put(key, preference);
-        }
-    }
-
-    public AuthResolver.PreferenceHint pendingPreference(String key) {
-        return pendingPreferences.get(key);
-    }
-
-    public Map<String, AuthResolver.PreferenceHint> pendingPreferences() {
-        return pendingPreferences;
+    public IdentityResolver identityResolver() {
+        return identityResolver;
     }
 }

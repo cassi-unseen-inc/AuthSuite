@@ -4,9 +4,10 @@ import com.mojang.authlib.minecraft.MinecraftSessionService;
 import net.authsuite.common.config.AuthSuiteConfig;
 import net.authsuite.common.identity.IdentityRegistry;
 import net.authsuite.common.log.AuthSuiteLogger;
+import net.authsuite.common.login.LoginAttempt;
+import net.authsuite.common.login.LoginAttemptStore;
 import net.authsuite.common.provider.AuthResolver;
 import net.authsuite.common.provider.ProviderManager;
-import net.authsuite.fabric.server.FabricServer;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -44,9 +45,22 @@ public final class SessionServiceProxy implements InvocationHandler {
         this.profileBuilder = new LoginProfileBuilder(identityRegistry, providerManager, resolver, log);
     }
 
-    private AuthResolver.PreferenceHint pendingPreference(String username) {
-        FabricServer server = FabricServer.get();
-        return server != null ? server.pendingPreference(username) : null;
+    /**
+     * The preference for THIS connection's login attempt, inherited by the
+     * authenticator thread via {@link LoginAttemptStore}. Never keyed by username.
+     */
+    private AuthResolver.PreferenceHint currentPreference() {
+        LoginAttempt attempt = LoginAttemptStore.current();
+        return attempt == null ? null : attempt.preference();
+    }
+
+    private void finishAttempt(LoginAttempt.State state) {
+        LoginAttempt attempt = LoginAttemptStore.current();
+        if (attempt != null) {
+            LoginAttemptStore.finish(attempt, state);
+        } else {
+            LoginAttemptStore.clearPushed();
+        }
     }
 
     public MinecraftSessionService wrap(MinecraftSessionService original) {
@@ -112,13 +126,20 @@ public final class SessionServiceProxy implements InvocationHandler {
         log.debug("hasJoined intercepted for '{}'", username);
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
-        AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
-                pendingPreference(username));
-        if (resolution == null || resolution.profile() == null) {
-            log.info("Login rejected for '{}': no provider validated the session", username);
-            return null;
+        try {
+            AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
+                    currentPreference());
+            if (resolution == null || resolution.profile() == null) {
+                log.info("Login rejected for '{}': no provider validated the session", username);
+                finishAttempt(LoginAttempt.State.FAILED);
+                return null;
+            }
+            finishAttempt(LoginAttempt.State.SUCCESS);
+            return profileBuilder.buildProfileResult(resolution, username, serverId);
+        } catch (Exception e) {
+            finishAttempt(LoginAttempt.State.FAILED);
+            throw e;
         }
-        return profileBuilder.buildProfileResult(resolution, username, serverId);
     }
 
     private InetAddress extractAddress(Object[] args) {

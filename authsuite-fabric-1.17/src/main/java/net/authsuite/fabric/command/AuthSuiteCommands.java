@@ -8,12 +8,12 @@ import net.authsuite.common.identity.IdentityRegistry;
 import net.authsuite.fabric.server.FabricServer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
- * AuthSuite administrative commands: {@code /authsuite identity <player>} and
+ * AuthSuite administrative commands: {@code /authsuite identity <identity>} and
  * {@code /authsuite whoami}.
  */
 public final class AuthSuiteCommands {
@@ -25,24 +25,16 @@ public final class AuthSuiteCommands {
         dispatcher.register(Commands.literal("authsuite")
                 .requires(src -> src.hasPermission(2))
                 .then(Commands.literal("identity")
-                        .then(Commands.argument("player", EntityArgument.player())
-                                .executes(ctx -> identity(ctx, server, EntityArgument.getPlayer(ctx, "player")))))
+                        .then(Commands.argument("identity", AuthIdentityArgument.identity(server))
+                                .executes(ctx -> identity(ctx, server, AuthIdentityArgument.getIdentity(ctx, "identity")))))
                 .then(Commands.literal("whoami")
                         .executes(ctx -> whoami(ctx, server))));
     }
 
-    private static int identity(CommandContext<CommandSourceStack> ctx, FabricServer server, ServerPlayer target)
+    private static int identity(CommandContext<CommandSourceStack> ctx, FabricServer server, HybridIdentity identity)
             throws CommandSyntaxException {
-        IdentityRegistry registry = server.identityRegistry();
-        HybridIdentity identity = registry.byUuid(target.getUUID())
-                .map(reg -> reg.identity())
-                .orElse(null);
-        if (identity == null) {
-            ctx.getSource().sendFailure(new TextComponent("No AuthSuite identity registered for " + target.getGameProfile().getName()));
-            return 0;
-        }
         ctx.getSource().sendSuccess(new TextComponent(
-                target.getGameProfile().getName() + " -> " + identity.providerId() + ":" + identity.providerAccountId()
+                identity.username() + " -> " + identity.providerId() + ":" + identity.providerAccountId()
                         + " (canonical " + identity.minecraftUUID() + ")"), false);
         return 1;
     }

@@ -91,7 +91,14 @@ public final class LoginProfileBuilder {
 
         GameProfile gameProfile = new GameProfile(canonical, profile.username());
         for (Map.Entry<String, String> entry : profile.textures().entrySet()) {
-            gameProfile.getProperties().put(entry.getKey(), new Property(entry.getKey(), entry.getValue()));
+            String name = entry.getKey();
+            String value = entry.getValue();
+            String signature = profile.textureSignatures().get(name);
+            if (signature != null && !signature.isBlank()) {
+                gameProfile.getProperties().put(name, new Property(name, value, signature));
+            } else {
+                gameProfile.getProperties().put(name, new Property(name, value));
+            }
         }
         // Never let the client dictate chat-key or uploadable-texture properties.
         gameProfile.getProperties().removeAll("profilePublicKey");
@@ -109,7 +116,8 @@ public final class LoginProfileBuilder {
     public SkinDirective buildDirective(AuthenticatedProfile profile) {
         UUID canonical = CanonicalUuid.from(profile.provider().providerId(), profile.providerAccountId());
         return new SkinDirective(canonical, profile.provider().providerId(),
-                skinResource(profile, "skin"), capeResource(profile), modelType(profile), 1);
+                skinResource(profile, "skin"), capeResource(profile), modelType(profile), 1,
+                profile.provider().domain());
     }
 
     private Map<String, String> skinMetadata(AuthenticatedProfile profile) {

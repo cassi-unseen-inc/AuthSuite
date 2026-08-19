@@ -50,7 +50,19 @@ public final class SkinBroadcaster {
                 .orElse(null);
     }
 
-    /** Broadcast the directive for a freshly logged-in player. */
+    /**
+     * Bidirectional skin sync (post-audit §9) for a freshly logged-in player:
+     * the newcomer's directive is sent to every already-online player (so their
+     * client renders the newcomer's provider skin) and every known directive is
+     * sent to the newcomer (so they render everyone else's skins). All directives
+     * are keyed by canonical UUID; the client remains the security authority and
+     * re-validates every field against {@link net.authsuite.common.skin.SkinPolicy}.
+     * <p>
+     * Deviation from the 1.20.4 reference: Forge's
+     * {@code ServerGamePacketListenerImpl} has no
+     * {@code send(CustomPacketPayload)} extension, so the sends go through
+     * {@link ForgeNetwork#sendToPlayer}.
+     */
     public void broadcast(ServerPlayer player, HybridIdentity identity) {
         SkinDirective directive = directives.get(player.getUUID());
         if (directive == null) {
@@ -60,8 +72,19 @@ public final class SkinBroadcaster {
             }
             directives.put(player.getUUID(), directive);
         }
+        for (ServerPlayer other : player.server.getPlayerList().getPlayers()) {
+            if (other != player && !other.getUUID().equals(player.getUUID())) {
+                ForgeNetwork.sendToPlayer(other, PlayerSkinDirectivePayload.of(directive));
+            }
+        }
+        for (Map.Entry<UUID, SkinDirective> entry : directives.entrySet()) {
+            if (!entry.getKey().equals(player.getUUID())) {
+                ForgeNetwork.sendToPlayer(player, PlayerSkinDirectivePayload.of(entry.getValue()));
+            }
+        }
         ForgeNetwork.sendToPlayer(player, PlayerSkinDirectivePayload.of(directive));
-        log.debug("Sent skin directive to {} (revision {})", player.getGameProfile().getName(), directive.revision());
+        log.debug("Bidirectionally synced skin directives on {} join (revision {})",
+                player.getGameProfile().getName(), directive.revision());
     }
 
     public void remove(UUID canonicalUuid) {

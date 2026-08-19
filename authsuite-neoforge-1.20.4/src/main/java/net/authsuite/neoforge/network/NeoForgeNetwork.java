@@ -11,9 +11,14 @@ import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
 
 /**
  * NeoForge 1.20.4 network wiring using the {@link RegisterPayloadHandlerEvent}
- * era API (before stream-codec payloads). Registers the provider preference
- * (client -> server, both config and play phases) and the authoritative skin
+ * era API (before stream-codec payloads). Registers the authoritative skin
  * directive (server -> client, play phase).
+ * <p>
+ * The provider preference is intentionally inert here: 1.20.4+ NeoForge has no
+ * login-phase channel at all, so a client cannot announce its preference before
+ * identity verification. The {@code AuthProviderPreferencePayload} registration is
+ * retained only for wire compatibility; its handler is a no-op and the connection
+ * preference is never recorded.
  */
 public final class NeoForgeNetwork {
 
@@ -50,19 +55,11 @@ public final class NeoForgeNetwork {
     }
 
     private static void handlePreference(AuthProviderPreferencePayload payload, net.minecraft.world.entity.player.Player player) {
-        PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-        if (preference.isEmpty()) {
-            return;
-        }
-        String key = player != null
-                ? player.getGameProfile().getName()
-                : "anon";
+        // No-op: 1.20.4+ has no login-phase channel, so the preference is never
+        // announced before identity verification and must not be trusted here.
         net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
         if (server != null) {
-            server.recordPreference(key,
-                    new net.authsuite.common.provider.AuthResolver.PreferenceHint(
-                            preference.preferredProviderId(), preference.sessionHint()));
-            server.log().debug("Recorded client provider preference for {}", key);
+            server.log().debug("Ignoring client provider preference (no login channel in this version)");
         }
     }
 

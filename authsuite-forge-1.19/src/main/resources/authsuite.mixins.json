@@ -4,10 +4,12 @@
   "package": "net.authsuite.forge.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "CommandDispatcherMixin",
+    "ClientHandshakeMixin",
     "PlayerListMixin",
     "ServerPlayerMixin",
-    "PlayerInfoMixin"
+    "PlayerInfoMixin",
+    "ServerLoginDisconnectMixin",
+    "ServerLoginAttemptMixin"
   ],
   "injectors": {
     "defaultRequire": 0

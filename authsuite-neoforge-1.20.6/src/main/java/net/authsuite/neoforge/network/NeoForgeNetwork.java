@@ -11,6 +11,12 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 /**
  * NeoForge network wiring: payload type registration plus client-side event
  * subscription for sending the provider preference.
+ * <p>
+ * The provider preference is intentionally inert here: 1.20.6 NeoForge has no
+ * login-phase channel at all, so a client cannot announce its preference before
+ * identity verification. The {@code AuthProviderPreferencePayload} registration is
+ * retained only for wire compatibility; its handler is a no-op and the connection
+ * preference is never recorded.
  */
 public final class NeoForgeNetwork {
 
@@ -42,24 +48,12 @@ public final class NeoForgeNetwork {
     }
 
     private static void handlePreference(AuthProviderPreferencePayload payload, IPayloadContext context) {
-        PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-        if (preference.isEmpty()) {
-            return;
+        // No-op: 1.20.6 has no login-phase channel, so the preference is never
+        // announced before identity verification and must not be trusted here.
+        net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
+        if (server != null) {
+            server.log().debug("Ignoring client provider preference (no login channel in this version)");
         }
-        String key = context.player() != null
-                ? context.player().getGameProfile().getName()
-                : context.connection().getRemoteAddress() != null
-                        ? context.connection().getRemoteAddress().toString()
-                        : "anon";
-        context.enqueueWork(() -> {
-            net.authsuite.neoforge.NeoForgeServer server = net.authsuite.neoforge.NeoForgeServer.get();
-            if (server != null) {
-                server.recordPreference(key,
-                        new net.authsuite.common.provider.AuthResolver.PreferenceHint(
-                                preference.preferredProviderId(), preference.sessionHint()));
-                server.log().debug("Recorded client provider preference for {}", key);
-            }
-        });
     }
 
     private static void handleSkinDirective(PlayerSkinDirectivePayload payload, IPayloadContext context) {

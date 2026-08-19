@@ -1,11 +1,6 @@
 package net.authsuite.forge.client;
 
-import net.authsuite.common.AuthSuiteConstants;
-import net.authsuite.common.client.ClientPreference;
-import net.authsuite.common.packet.PacketCodec;
 import net.authsuite.common.skin.SkinDirective;
-import net.authsuite.forge.network.AuthProviderPreferencePayload;
-import net.authsuite.forge.network.ForgeNetwork;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -15,9 +10,11 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Client-side AuthSuite logic: sends the provider preference at login and applies
- * validated skin directives. All client skin fetches are gated by the skin policy
- * enforced in {@link ClientSkinApplier}.
+ * Client-side AuthSuite logic: applies validated skin directives. All client skin
+ * fetches are gated by the skin policy enforced in {@link ClientSkinApplier}.
+ * <p>
+ * No provider preference is sent: 1.21.1 Forge has no login-phase channel, so a
+ * preference cannot be announced before identity verification.
  */
 public final class AuthSuiteClient {
 
@@ -41,12 +38,6 @@ public final class AuthSuiteClient {
     }
 
     private void onPlayerLoggedIn(ClientPlayerNetworkEvent.LoggingIn event) {
-        // Provider preference is advisory and arrives after the first login on 1.21.x;
-        // it is bound for reconnects and identity resolution (never proof of identity).
-        String preferred = ClientPreference.detect();
-        PacketCodec.PreferencePayload preference = new PacketCodec.PreferencePayload(preferred, "");
-        ForgeNetwork.sendToServer(new AuthProviderPreferencePayload(
-                PacketCodec.encodePreference(preference.preferredProviderId(), preference.sessionHint())));
         skinApplier.reset();
     }
 

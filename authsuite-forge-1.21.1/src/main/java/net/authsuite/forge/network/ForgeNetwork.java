@@ -1,7 +1,6 @@
 package net.authsuite.forge.network;
 
 import net.authsuite.common.packet.PacketCodec;
-import net.authsuite.common.provider.AuthResolver;
 import net.authsuite.forge.ForgeServer;
 import net.authsuite.forge.client.AuthSuiteClient;
 import net.minecraft.network.protocol.PacketFlow;
@@ -17,6 +16,12 @@ import net.minecraftforge.network.PacketDistributor;
  * Forge network wiring using the Forge 1.21.1 {@code ChannelBuilder} /
  * {@code PayloadChannel} API. Registers the provider preference (client -> server)
  * and the authoritative skin directive (server -> client).
+ * <p>
+ * The provider preference is intentionally inert here: 1.21.1 Forge has no
+ * login-phase channel at all, so a client cannot announce its preference before
+ * identity verification. The {@code AuthProviderPreferencePayload} registration is
+ * retained only for wire compatibility; its handler is a no-op and the connection
+ * preference is never recorded.
  */
 public final class ForgeNetwork {
 
@@ -51,26 +56,12 @@ public final class ForgeNetwork {
     }
 
     private static void handlePreference(AuthProviderPreferencePayload payload, CustomPayloadEvent.Context context) {
-        PacketCodec.PreferencePayload preference = PacketCodec.decodePreference(payload.data());
-        if (preference.isEmpty()) {
-            context.setPacketHandled(true);
-            return;
+        // No-op: 1.21.1 Forge has no login-phase channel, so the preference is never
+        // announced before identity verification and must not be trusted here.
+        ForgeServer server = ForgeServer.get();
+        if (server != null) {
+            server.log().debug("Ignoring client provider preference (no login channel in this version)");
         }
-        ServerPlayer player = context.getSender();
-        String key = player != null
-                ? player.getGameProfile().getName()
-                : context.getConnection().getRemoteAddress() != null
-                        ? context.getConnection().getRemoteAddress().toString()
-                        : "anon";
-        context.enqueueWork(() -> {
-            ForgeServer server = ForgeServer.get();
-            if (server != null) {
-                server.recordPreference(key,
-                        new AuthResolver.PreferenceHint(
-                                preference.preferredProviderId(), preference.sessionHint()));
-                server.log().debug("Recorded client provider preference for {}", key);
-            }
-        });
         context.setPacketHandled(true);
     }
 

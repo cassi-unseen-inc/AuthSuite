@@ -35,7 +35,7 @@ public abstract class ServerPlayerMixin {
         cir.setReturnValue(level);
     }
 
-    @Inject(method = "method_5476", remap = false, at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getDisplayName()Lnet/minecraft/network/chat/Component;", at = @At("HEAD"), cancellable = true)
     private void authsuite_pinShortcode(CallbackInfoReturnable<Component> cir) {
         String shortcode = authsuiteShortcode();
         if (shortcode == null) {

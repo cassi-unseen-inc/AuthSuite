@@ -5,10 +5,11 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "ChatSignatureMixin",
-    "CommandDispatcherMixin",
     "PlayerListMixin",
     "ServerPlayerMixin",
-    "PlayerInfoMixin"
+    "PlayerInfoMixin",
+    "ServerLoginAttemptMixin",
+    "ServerLoginDisconnectMixin"
   ],
   "injectors": {
     "defaultRequire": 0

@@ -1,5 +1,6 @@
 package net.authsuite.forge;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.ServicesKeySet;
 import net.authsuite.common.config.AuthSuiteConfig;
@@ -7,6 +8,7 @@ import net.authsuite.common.config.ConfigLoader;
 import net.authsuite.common.config.ProviderConfig;
 import net.authsuite.common.config.ShortcodeRegistry;
 import net.authsuite.common.identity.IdentityRegistry;
+import net.authsuite.common.identity.IdentityResolver;
 import net.authsuite.common.log.AuthSuiteLogger;
 import net.authsuite.common.provider.AuthlibProvider;
 import net.authsuite.common.provider.AuthResolver;
@@ -15,7 +17,7 @@ import net.authsuite.common.provider.ProviderId;
 import net.authsuite.common.provider.ProviderManager;
 import net.authsuite.forge.api.ForgeAuthSuiteAPI;
 import net.authsuite.forge.command.AuthSuiteCommands;
-import net.authsuite.forge.command.OpCommandInterceptor;
+import net.authsuite.forge.command.OpCommands;
 import net.authsuite.forge.login.SessionServiceProxy;
 import net.authsuite.forge.network.ForgeNetwork;
 import net.authsuite.forge.ops.OpsRouter;
@@ -38,10 +40,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.RecordComponent;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * Forge platform bootstrap.
@@ -64,9 +63,9 @@ public final class ForgeServer {
     private final IdentityRegistry identityRegistry;
     private final ForgePermissionService permissionService;
     private final AuthResolver resolver;
+    private final IdentityResolver identityResolver;
     private final ProviderHttpClient httpClient;
     private final AuthSuiteConfig config;
-    private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferences = new ConcurrentHashMap<>();
 
     private ForgeAuthSuiteAPI api;
     private OpsRouter opsRouter;
@@ -93,6 +92,7 @@ public final class ForgeServer {
         this.providerManager = new ProviderManager(shortcodes, log);
         wireProviders();
         this.resolver = new AuthResolver(providerManager, config, log);
+        this.identityResolver = new IdentityResolver(identityRegistry, providerManager, log);
         this.permissionService = new ForgePermissionService(identityRegistry, providerManager, config, log);
     }
 
@@ -169,7 +169,7 @@ public final class ForgeServer {
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
-        OpCommandInterceptor.register(event.getDispatcher());
+        OpCommands.register(event.getDispatcher(), this);
         AuthSuiteCommands.register(event.getDispatcher(), this);
     }
 
@@ -320,19 +320,29 @@ public final class ForgeServer {
         return server;
     }
 
-    public void recordPreference(String key, AuthResolver.PreferenceHint preference) {
-        if (preference == null) {
-            pendingPreferences.remove(key);
-        } else {
-            pendingPreferences.put(key, preference);
+    public IdentityResolver identityResolver() {
+        return identityResolver;
+    }
+
+    /**
+     * Releases a session whose login-phase connection was terminated before the
+     * player joined. Called from {@code ServerLoginDisconnectMixin}; the canonical
+     * identity is read from the login listener's profile, which is only set after a
+     * successful {@code hasJoinedServer} (so this is a no-op for connections that
+     * never authenticated).
+     */
+    public static void releaseLoginSession(GameProfile profile) {
+        if (profile == null) {
+            return;
         }
-    }
-
-    public AuthResolver.PreferenceHint pendingPreference(String key) {
-        return pendingPreferences.get(key);
-    }
-
-    public Map<String, AuthResolver.PreferenceHint> pendingPreferences() {
-        return pendingPreferences;
+        ForgeServer server = ForgeServer.get();
+        if (server == null) {
+            return;
+        }
+        UUID uuid = profile.getId();
+        if (uuid != null && server.identityRegistry().byUuid(uuid).isPresent()) {
+            server.identityRegistry().release(uuid);
+            server.log().info("Released login-phase session for canonical identity {}", uuid);
+        }
     }
 }
