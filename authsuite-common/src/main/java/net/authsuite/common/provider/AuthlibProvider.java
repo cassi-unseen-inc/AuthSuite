@@ -122,6 +122,7 @@ public final class AuthlibProvider implements AuthProvider {
         String playerName = obj.has("name") ? obj.get("name").getAsString() : attempt.username();
         UUID profileUuid = parseUuid(rawId);
         Map<String, String> textures = new HashMap<>();
+        Map<String, String> signatures = new HashMap<>();
         if (obj.has("properties") && obj.get("properties").isJsonArray()) {
             JsonArray props = obj.getAsJsonArray("properties");
             for (JsonElement prop : props) {
@@ -131,13 +132,17 @@ public final class AuthlibProvider implements AuthProvider {
                     String value = po.has("value") ? po.get("value").getAsString() : null;
                     if (name != null && value != null) {
                         textures.put(name, value);
+                        String signature = po.has("signature") ? po.get("signature").getAsString() : null;
+                        if (signature != null && !signature.isBlank()) {
+                            signatures.put(name, signature);
+                        }
                     }
                 }
             }
         }
         log.debug("auth {} succeeded via {}", attempt.username(), providerId.shortcode());
-        return AuthenticatedProfile.withTtl(providerId, accountId, playerName, profileUuid,
-                Map.copyOf(textures), 300_000);
+        return AuthenticatedProfile.withTtlSigned(providerId, accountId, playerName, profileUuid,
+                Map.copyOf(textures), Map.copyOf(signatures), 300_000);
     }
 
     private AuthenticatedProfile unwrap(Throwable ex, AuthAttempt attempt) {

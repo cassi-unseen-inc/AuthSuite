@@ -75,6 +75,48 @@ public final class SkinPolicy {
         }
     }
 
+    /**
+     * Validates a full skin directive. The permitted host set comes from the
+     * locally configured providers; when the client has no configuration for the
+     * provider (e.g. a zero-config client), the host declared by the authoritative
+     * server directive is used instead. HTTPS and hostile-URL-component checks
+     * always apply.
+     */
+    public ValidationResult validateDirective(SkinDirective directive, int maxRedirects) {
+        if (directive == null) {
+            return ValidationResult.reject("null directive");
+        }
+        SkinResource resource = directive.skinResource();
+        if (resource == null) {
+            return ValidationResult.reject("null skin resource");
+        }
+        try {
+            URI uri = resource.uri();
+            String scheme = uri.getScheme() == null ? "" : uri.getScheme().toLowerCase(Locale.ROOT);
+            if (!"https".equals(scheme)) {
+                return ValidationResult.reject("scheme must be https");
+            }
+            String host = uri.getHost() == null ? "" : uri.getHost().toLowerCase(Locale.ROOT);
+            Set<String> allowed = allowedHostsFor(directive.providerId());
+            if (allowed.isEmpty()) {
+                String declared = directive.skinHost();
+                if (declared == null || declared.isBlank()) {
+                    return ValidationResult.reject("no allowed host for provider " + directive.providerId());
+                }
+                allowed = Set.of(declared.toLowerCase(Locale.ROOT));
+            }
+            if (!allowed.contains(host)) {
+                return ValidationResult.reject("host " + host + " not allowlisted for " + directive.providerId());
+            }
+            if (resource.url().contains("@") || resource.url().contains("#")) {
+                return ValidationResult.reject("suspicious URL components");
+            }
+            return ValidationResult.allow();
+        } catch (RuntimeException e) {
+            return ValidationResult.reject("unparseable resource url");
+        }
+    }
+
     public static final class ValidationResult {
         private final boolean allowed;
         private final String reason;

@@ -19,6 +19,7 @@ public record AuthenticatedProfile(
         String username,
         UUID providerProfileUuid,
         Map<String, String> textures,
+        Map<String, String> textureSignatures,
         long expiresAtMs) {
 
     public AuthenticatedProfile {
@@ -28,9 +29,18 @@ public record AuthenticatedProfile(
         if (providerAccountId.isBlank()) {
             throw new IllegalArgumentException("providerAccountId must not be blank");
         }
+        textures = textures == null ? Map.of() : Map.copyOf(textures);
+        textureSignatures = textureSignatures == null ? Map.of() : Map.copyOf(textureSignatures);
         if (expiresAtMs <= 0) {
             throw new IllegalArgumentException("expiresAtMs must be positive");
         }
+    }
+
+    /** Convenience constructor without provider property signatures (legacy behavior). */
+    public AuthenticatedProfile(
+            ProviderId provider, String providerAccountId, String username, UUID providerProfileUuid,
+            Map<String, String> textures, long expiresAtMs) {
+        this(provider, providerAccountId, username, providerProfileUuid, textures, Map.of(), expiresAtMs);
     }
 
     public boolean isExpired() {
@@ -47,6 +57,13 @@ public record AuthenticatedProfile(
             Map<String, String> textures, long ttlMillis) {
         return new AuthenticatedProfile(provider, accountId, username, profileUuid, textures,
                 System.currentTimeMillis() + ttlMillis);
+    }
+
+    public static AuthenticatedProfile withTtlSigned(
+            ProviderId provider, String accountId, String username, UUID profileUuid,
+            Map<String, String> textures, Map<String, String> textureSignatures, long ttlMillis) {
+        return new AuthenticatedProfile(provider, accountId, username, profileUuid, textures,
+                textureSignatures, System.currentTimeMillis() + ttlMillis);
     }
 
     public static long nowPlus(long ttlMillis) {

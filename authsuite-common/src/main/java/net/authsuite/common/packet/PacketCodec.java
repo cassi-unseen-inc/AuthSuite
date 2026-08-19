@@ -68,7 +68,9 @@ public final class PacketCodec {
         byte[] skin = str(directive.skinResource() == null ? null : directive.skinResource().url());
         byte[] cape = str(directive.capeResource() == null ? null : directive.capeResource().url());
         byte[] model = str(directive.modelType());
-        int size = 16 + 4 + provider.length + 4 + skin.length + 4 + cape.length + 4 + model.length + 8;
+        byte[] host = str(directive.skinHost());
+        int size = 16 + 4 + provider.length + 4 + skin.length + 4 + cape.length + 4 + model.length + 8
+                + 4 + host.length;
         byte[] out = new byte[size];
         int i = 0;
         i = putBytes(out, i, uuid);
@@ -81,6 +83,8 @@ public final class PacketCodec {
         i = putInt(out, i, model.length);
         i = putBytes(out, i, model);
         i = putLong(out, i, directive.revision());
+        i = putInt(out, i, host.length);
+        putBytes(out, i, host);
         return out;
     }
 
@@ -105,10 +109,19 @@ public final class PacketCodec {
         String model = new String(data, i, mlen, StandardCharsets.UTF_8);
         i += mlen;
         long rev = getLong(data, i);
+        i += 8;
+        String host = null;
+        if (i + 4 <= data.length) {
+            int hlen = getInt(data, i);
+            i += 4;
+            if (i + hlen <= data.length) {
+                host = new String(data, i, hlen, StandardCharsets.UTF_8);
+            }
+        }
         return new SkinDirective(uuid, provider,
                 skin == null || skin.isBlank() ? null : new SkinResource(skin),
                 cape == null || cape.isBlank() ? null : new SkinResource(cape),
-                model, rev);
+                model, rev, host);
     }
 
     // ---- primitive helpers ----

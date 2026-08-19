@@ -30,7 +30,7 @@ public final class ClientSkinApplier {
             validated.remove(directive.playerUUID());
             return;
         }
-        SkinPolicy.ValidationResult result = policy.validate(directive.providerId(), directive.skinResource(), 0);
+        SkinPolicy.ValidationResult result = policy.validateDirective(directive, 0);
         if (!result.allowed()) {
             // A directive failing the provider policy must never reach the renderer.
             validated.remove(directive.playerUUID());

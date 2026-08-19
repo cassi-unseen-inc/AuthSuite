@@ -17,7 +17,8 @@ public record SkinDirective(
         SkinResource skinResource,
         SkinResource capeResource,
         String modelType,
-        long revision) {
+        long revision,
+        String skinHost) {
 
     public SkinDirective {
         Objects.requireNonNull(playerUUID, "playerUUID");
@@ -30,9 +31,16 @@ public record SkinDirective(
         }
     }
 
+    /** Legacy constructor without an explicit skin host (defaults to {@code null}). */
+    public SkinDirective(UUID playerUUID, String providerId, SkinResource skinResource,
+                         SkinResource capeResource, String modelType, long revision) {
+        this(playerUUID, providerId, skinResource, capeResource, modelType, revision, null);
+    }
+
     public static SkinDirective copyWithRev(SkinDirective directive, long revision) {
         return new SkinDirective(directive.playerUUID(), directive.providerId(),
-                directive.skinResource(), directive.capeResource(), directive.modelType(), revision);
+                directive.skinResource(), directive.capeResource(), directive.modelType(), revision,
+                directive.skinHost());
     }
 
     public Map<String, String> toMetadata() {
