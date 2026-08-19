@@ -6,7 +6,6 @@
   "mixins": [
     "ChatSignatureMixin",
     "ClientHandshakeMixin",
-    "CommandDispatcherMixin",
     "PlayerListMixin",
     "ServerPlayerMixin",
     "PlayerInfoMixin",

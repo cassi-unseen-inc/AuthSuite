@@ -25,7 +25,7 @@ import java.util.Optional;
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
 
-    @Inject(method = "op(Lcom/mojang/authlib/GameProfile;)V", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "m_5749_(Lcom/mojang/authlib/GameProfile;)V", at = @At("HEAD"), cancellable = true, remap = false)
     private void authsuite_op(GameProfile profile, CallbackInfo ci) {
         ForgeServer server = ForgeServer.get();
         if (server == null || server.opsRouter() == null) {
@@ -41,7 +41,7 @@ public abstract class PlayerListMixin {
         ci.cancel();
     }
 
-    @Inject(method = "deop(Lcom/mojang/authlib/GameProfile;)V", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "m_5750_(Lcom/mojang/authlib/GameProfile;)V", at = @At("HEAD"), cancellable = true, remap = false)
     private void authsuite_deop(GameProfile profile, CallbackInfo ci) {
         ForgeServer server = ForgeServer.get();
         if (server == null || server.opsRouter() == null) {
@@ -55,7 +55,7 @@ public abstract class PlayerListMixin {
         ci.cancel();
     }
 
-    @Inject(method = "isOp(Lcom/mojang/authlib/GameProfile;)Z", at = @At("HEAD"), cancellable = true, remap = false)
+    @Inject(method = "m_11303_(Lcom/mojang/authlib/GameProfile;)Z", at = @At("HEAD"), cancellable = true, remap = false)
     private void authsuite_isOp(GameProfile profile, CallbackInfoReturnable<Boolean> cir) {
         ForgeServer server = ForgeServer.get();
         if (server == null || server.opsRouter() == null) {
@@ -71,8 +71,8 @@ public abstract class PlayerListMixin {
     // ---- player data routing ----
 
     @Redirect(
-            method = "save(Lnet/minecraft/server/level/ServerPlayer;)V",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/PlayerDataStorage;save(Lnet/minecraft/world/entity/player/Player;)V"),
+            method = "m_6765_(Lnet/minecraft/server/level/ServerPlayer;)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/PlayerDataStorage;m_78433_(Lnet/minecraft/world/entity/player/Player;)V"),
             remap = false)
     private void authsuite_routeSave(PlayerDataStorage vanillaStorage, Player player) {
         ForgeServer server = ForgeServer.get();
@@ -87,8 +87,8 @@ public abstract class PlayerListMixin {
     }
 
     @Redirect(
-            method = "load(Lnet/minecraft/server/level/ServerPlayer;)Lnet/minecraft/nbt/CompoundTag;",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/PlayerDataStorage;load(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/nbt/CompoundTag;"),
+            method = "m_11224_(Lnet/minecraft/server/level/ServerPlayer;)Lnet/minecraft/nbt/CompoundTag;",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/PlayerDataStorage;m_78435_(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/nbt/CompoundTag;"),
             remap = false)
     private CompoundTag authsuite_routeLoad(PlayerDataStorage vanillaStorage, Player player) {
         ForgeServer server = ForgeServer.get();

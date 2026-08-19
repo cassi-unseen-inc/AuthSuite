@@ -15,7 +15,7 @@ import net.authsuite.common.provider.ProviderId;
 import net.authsuite.common.provider.ProviderManager;
 import net.authsuite.fabric.api.FabricAuthSuiteAPI;
 import net.authsuite.fabric.command.AuthSuiteCommands;
-import net.authsuite.fabric.command.OpCommandInterceptor;
+import net.authsuite.fabric.command.OpCommands;
 import net.authsuite.fabric.login.SessionServiceProxy;
 import net.authsuite.fabric.network.FabricNetwork;
 import net.authsuite.fabric.ops.OpsRouter;
@@ -104,8 +104,8 @@ public final class FabricServer {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> instance.onPlayerJoin(handler.player));
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> instance.onPlayerLeave(handler.player));
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            OpCommandInterceptor.register(dispatcher);
             AuthSuiteCommands.register(dispatcher, instance);
+            OpCommands.register(dispatcher, instance);
         });
         FabricNetwork.init();
         log.info("AuthSuite Fabric initialized");

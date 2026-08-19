@@ -16,7 +16,7 @@ import net.authsuite.common.provider.ProviderId;
 import net.authsuite.common.provider.ProviderManager;
 import net.authsuite.forge.api.ForgeAuthSuiteAPI;
 import net.authsuite.forge.command.AuthSuiteCommands;
-import net.authsuite.forge.command.OpCommandInterceptor;
+import net.authsuite.forge.command.OpCommands;
 import net.authsuite.forge.login.SessionServiceProxy;
 import net.authsuite.forge.network.ForgeNetwork;
 import net.authsuite.forge.ops.OpsRouter;
@@ -170,8 +170,8 @@ public final class ForgeServer {
     }
 
     private void onRegisterCommands(RegisterCommandsEvent event) {
-        OpCommandInterceptor.register(event.getDispatcher());
         AuthSuiteCommands.register(event.getDispatcher(), this);
+        OpCommands.register(event.getDispatcher(), this);
     }
 
     private void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
