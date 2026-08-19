@@ -9,7 +9,8 @@
     "CommandDispatcherMixin",
     "PlayerListMixin",
     "ServerPlayerMixin",
-    "PlayerInfoMixin"
+    "PlayerInfoMixin",
+    "ServerLoginDisconnectMixin"
   ],
   "injectors": {
     "defaultRequire": 0

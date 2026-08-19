@@ -1,5 +1,6 @@
 package net.authsuite.forge;
 
+import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftSessionService;
 import com.mojang.authlib.yggdrasil.ServicesKeySet;
 import net.authsuite.common.config.AuthSuiteConfig;
@@ -359,5 +360,28 @@ public final class ForgeServer {
             return null;
         }
         return pendingPreferencesByAddress.get(address.getHostAddress());
+    }
+
+    /**
+     * Releases a session whose login-phase connection was terminated before the
+     * player joined. Called from {@code ServerLoginDisconnectMixin}; the canonical
+     * identity is read from the login listener's profile, which is only set after a
+     * successful {@code hasJoinedServer} (so this is a no-op for connections that
+     * never authenticated).
+     */
+    public static void releaseLoginSession(GameProfile profile) {
+        if (profile == null || profile.getId() == null) {
+            return;
+        }
+        ForgeServer server = ForgeServer.get();
+        if (server == null) {
+            return;
+        }
+        IdentityRegistry registry = server.identityRegistry();
+        UUID uuid = profile.getId();
+        if (registry.byUuid(uuid).isPresent()) {
+            registry.release(uuid);
+            server.log().info("Released login-phase session for canonical identity {}", uuid);
+        }
     }
 }
