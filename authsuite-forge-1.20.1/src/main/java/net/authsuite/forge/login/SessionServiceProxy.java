@@ -52,9 +52,11 @@ public final class SessionServiceProxy implements InvocationHandler {
         return server != null ? server.pendingPreference(username) : null;
     }
 
-    private AuthResolver.PreferenceHint pendingPreferenceByAddress(InetAddress address) {
+    private void clearPendingPreference(String username) {
         ForgeServer server = ForgeServer.get();
-        return server != null ? server.pendingPreferenceByAddress(address) : null;
+        if (server != null && username != null) {
+            server.clearPreference(username);
+        }
     }
 
     public MinecraftSessionService wrap(MinecraftSessionService original) {
@@ -121,19 +123,20 @@ public final class SessionServiceProxy implements InvocationHandler {
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
         AuthResolver.PreferenceHint preference = pendingPreference(username);
-        if (preference == null) {
-            preference = pendingPreferenceByAddress(address);
-        }
         log.info("hasJoinedServer for '{}' address={} preference={}",
                 username, address == null ? "null" : address.getHostAddress(),
                 preference == null ? "null" : preference.providerIdOrShortcode());
-        AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
-                preference);
-        if (resolution == null || resolution.profile() == null) {
-            log.info("Login rejected for '{}': no provider validated the session", username);
-            return null;
+        try {
+            AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
+                    preference);
+            if (resolution == null || resolution.profile() == null) {
+                log.info("Login rejected for '{}': no provider validated the session", username);
+                return null;
+            }
+            return profileBuilder.buildProfileResult(resolution, username, serverId);
+        } finally {
+            clearPendingPreference(username);
         }
-        return profileBuilder.buildProfileResult(resolution, username, serverId);
     }
 
     private InetAddress extractAddress(Object[] args) {

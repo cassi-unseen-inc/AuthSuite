@@ -318,6 +318,17 @@ public final class FabricServer {
         return pendingPreferences.get(key);
     }
 
+    /**
+     * Removes a login-phase provider preference once it has been consumed (login
+     * succeeded or failed). The client heralds the preference on every join, so a
+     * persistent entry serves no purpose.
+     */
+    public void clearPreference(String username) {
+        if (username != null && pendingPreferences.remove(username) != null) {
+            log.info("Cleared login-phase provider preference for user '{}'", username);
+        }
+    }
+
     public Map<String, AuthResolver.PreferenceHint> pendingPreferences() {
         return pendingPreferences;
     }

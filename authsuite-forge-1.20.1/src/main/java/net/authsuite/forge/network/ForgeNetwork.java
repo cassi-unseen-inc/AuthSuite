@@ -22,9 +22,6 @@ import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
 
 import java.lang.reflect.Field;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -119,12 +116,6 @@ public final class ForgeNetwork {
                     server.log().info("Recorded login-phase provider preference for user '{}' = '{}'",
                             username, preference.preferredProviderId());
                 }
-                InetAddress address = remoteAddress(context.getNetworkManager());
-                if (address != null) {
-                    server.recordPreferenceByAddress(address, hint);
-                    server.log().info("Recorded login-phase provider preference for {} = '{}'",
-                            address.getHostAddress(), preference.preferredProviderId());
-                }
             }
         }
         context.setPacketHandled(true);
@@ -156,14 +147,6 @@ public final class ForgeNetwork {
                 }
             }
         } catch (Exception ignored) {
-        }
-        return null;
-    }
-
-    private static InetAddress remoteAddress(Connection connection) {
-        SocketAddress socketAddress = connection.getRemoteAddress();
-        if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
-            return inetSocketAddress.getAddress();
         }
         return null;
     }

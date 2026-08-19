@@ -112,13 +112,20 @@ public final class SessionServiceProxy implements InvocationHandler {
         log.debug("hasJoined intercepted for '{}'", username);
 
         long timeout = Math.max(1_000L, config.authTimeoutMs());
-        AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
-                pendingPreference(username));
-        if (resolution == null || resolution.profile() == null) {
-            log.info("Login rejected for '{}': no provider validated the session", username);
-            return null;
+        try {
+            AuthResolver.Resolution resolution = profileBuilder.resolveBlocking(username, serverId, address, timeout,
+                    pendingPreference(username));
+            if (resolution == null || resolution.profile() == null) {
+                log.info("Login rejected for '{}': no provider validated the session", username);
+                return null;
+            }
+            return profileBuilder.buildProfileResult(resolution, username, serverId);
+        } finally {
+            FabricServer server = FabricServer.get();
+            if (server != null && username != null) {
+                server.clearPreference(username);
+            }
         }
-        return profileBuilder.buildProfileResult(resolution, username, serverId);
     }
 
     private InetAddress extractAddress(Object[] args) {

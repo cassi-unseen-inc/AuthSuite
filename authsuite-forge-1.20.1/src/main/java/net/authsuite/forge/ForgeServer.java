@@ -37,7 +37,6 @@ import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.RecordComponent;
-import java.net.InetAddress;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Map;
@@ -69,7 +68,6 @@ public final class ForgeServer {
     private final ProviderHttpClient httpClient;
     private final AuthSuiteConfig config;
     private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferences = new ConcurrentHashMap<>();
-    private final ConcurrentMap<String, AuthResolver.PreferenceHint> pendingPreferencesByAddress = new ConcurrentHashMap<>();
 
     private ForgeAuthSuiteAPI api;
     private OpsRouter opsRouter;
@@ -340,26 +338,14 @@ public final class ForgeServer {
     }
 
     /**
-     * Records a login-phase provider preference keyed by the connecting remote
-     * address (before the username is known). Consumed by
-     * {@code SessionServiceProxy#handleHasJoinedServer} via the {@code InetAddress}
-     * argument so the very first join uses the client's provider without any
-     * pointless upstream polls.
+     * Removes a login-phase provider preference once it has been consumed (login
+     * succeeded or failed) or its connection died mid-login. The client heralds the
+     * preference on every join, so a persistent entry serves no purpose.
      */
-    public void recordPreferenceByAddress(InetAddress address, AuthResolver.PreferenceHint preference) {
-        String key = address.getHostAddress();
-        if (preference == null) {
-            pendingPreferencesByAddress.remove(key);
-        } else {
-            pendingPreferencesByAddress.put(key, preference);
+    public void clearPreference(String username) {
+        if (username != null && pendingPreferences.remove(username) != null) {
+            log.info("Cleared login-phase provider preference for user '{}'", username);
         }
-    }
-
-    public AuthResolver.PreferenceHint pendingPreferenceByAddress(InetAddress address) {
-        if (address == null) {
-            return null;
-        }
-        return pendingPreferencesByAddress.get(address.getHostAddress());
     }
 
     /**
@@ -370,18 +356,18 @@ public final class ForgeServer {
      * never authenticated).
      */
     public static void releaseLoginSession(GameProfile profile) {
-        if (profile == null || profile.getId() == null) {
+        if (profile == null) {
             return;
         }
         ForgeServer server = ForgeServer.get();
         if (server == null) {
             return;
         }
-        IdentityRegistry registry = server.identityRegistry();
         UUID uuid = profile.getId();
-        if (registry.byUuid(uuid).isPresent()) {
-            registry.release(uuid);
+        if (uuid != null && server.identityRegistry().byUuid(uuid).isPresent()) {
+            server.identityRegistry().release(uuid);
             server.log().info("Released login-phase session for canonical identity {}", uuid);
         }
+        server.clearPreference(profile.getName());
     }
 }
